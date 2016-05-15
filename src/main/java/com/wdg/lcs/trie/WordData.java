@@ -3,13 +3,13 @@ package com.wdg.lcs.trie;
 /**
  * 词语数据
  */
-public class WordData<T> {
+public class WordData {
 
 	/** 词 */
 	private String text;
 	
 	/** 用户数据 */
-	private T userData;
+	private Object userData;
 
 	public String getText() {
 		return text;
@@ -19,11 +19,11 @@ public class WordData<T> {
 		this.text = text;
 	}
 
-	public T getUserData() {
+	public Object getUserData() {
 		return userData;
 	}
 
-	public void setUserData(T userData) {
+	public void setUserData(Object userData) {
 		this.userData = userData;
 	}
 }

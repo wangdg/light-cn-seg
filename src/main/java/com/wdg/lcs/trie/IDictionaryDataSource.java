@@ -1,11 +1,9 @@
-package com.wdg.lcs.dict;
-
-import com.wdg.lcs.trie.WordData;
+package com.wdg.lcs.trie;
 
 /**
  * 字典数据源接口
  */
-public interface IDictionaryDataSource<T> {
+public interface IDictionaryDataSource {
 
 	/**
 	 * 是否有下一个数据
@@ -19,5 +17,5 @@ public interface IDictionaryDataSource<T> {
 	 * 
 	 * @return 下一条数据
 	 */
-	public WordData<T> next();
+	public WordData next();
 }

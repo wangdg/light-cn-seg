@@ -6,19 +6,19 @@ import java.util.Map;
 /**
  * Trie树结点类
  */
-public class TrieNode<T> {
+public class TrieNode {
 
 	/** 字符对象 */
 	private Character character;
 	
 	/** 子节点Map */
-	private Map<Character, TrieNode<T>> subNodeMap = new HashMap<>();
+	private Map<Character, TrieNode> subNodeMap = new HashMap<>();
 	
 	/** 是否成词 */
 	private boolean word = false;
 	
 	/** 用户数据 */
-	private T userData;
+	private Object userData;
 	
 	/**
 	 * 构造方法
@@ -37,7 +37,7 @@ public class TrieNode<T> {
 	 * 
 	 * @param node 结点对象
 	 */
-	public void addNode(TrieNode<T> node) {
+	public void addNode(TrieNode node) {
 		if (node != null) {
 			subNodeMap.put(node.getCharacter(), node);
 		}
@@ -58,7 +58,7 @@ public class TrieNode<T> {
 	 * @param ch 字符
 	 * @return 子结点对象
 	 */
-	public TrieNode<T> findSubNode(char ch) {
+	public TrieNode findSubNode(char ch) {
 		return subNodeMap.get(Character.valueOf(ch));
 	}
 	
@@ -85,7 +85,7 @@ public class TrieNode<T> {
 	 * 
 	 * @return 用户数据
 	 */
-	public T getUserData() {
+	public Object getUserData() {
 		return userData;
 	}
 
@@ -94,7 +94,7 @@ public class TrieNode<T> {
 	 * 
 	 * @param userData 用户数据
 	 */
-	public void setUserData(T userData) {
+	public void setUserData(Object userData) {
 		this.userData = userData;
 	}
 }

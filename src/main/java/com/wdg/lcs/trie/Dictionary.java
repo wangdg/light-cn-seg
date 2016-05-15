@@ -1,28 +1,25 @@
-package com.wdg.lcs.dict;
+package com.wdg.lcs.trie;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wdg.lcs.trie.TrieNode;
-import com.wdg.lcs.trie.WordData;
-
 /**
  * 词典类
  */
-public class Dictionary<T> {
+public class Dictionary {
 
 	/** Tree Map */
-	private Map<Character, TrieNode<T>> treeMap = new HashMap<>();
+	private Map<Character, TrieNode> treeMap = new HashMap<>();
 	
 	/**
 	 * 通过文件构建词典
 	 * 
 	 * @param file 文件对象
 	 */
-	public Dictionary(IDictionaryDataSource<T> source) {
+	public Dictionary(IDictionaryDataSource source) {
 		super();
 		while (source.hasNext()) {
-			WordData<T> wordData = source.next();
+			WordData wordData = source.next();
 			this.addWord(wordData.getText(), wordData.getUserData());
 		}
 	}
@@ -32,7 +29,8 @@ public class Dictionary<T> {
 	 * 
 	 * @param word 词
 	 */
-	public void addWord(String word, T userData) {
+	public void addWord(String word, Object userData) {
+		
 		if (word != null ) {
 			
 			String trim = word.trim();
@@ -42,10 +40,10 @@ public class Dictionary<T> {
 			
 			char[] charArray = trim.toCharArray();
 			
-			TrieNode<T> node = treeMap.get(Character.valueOf(charArray[0]));
+			TrieNode node = treeMap.get(Character.valueOf(charArray[0]));
 			if (node == null) {
 				boolean isWord = (charArray.length == 1);
-				node = new TrieNode<T>(charArray[0], isWord);
+				node = new TrieNode(charArray[0], isWord);
 				if (isWord) {
 					node.setUserData(userData);
 				}
@@ -55,9 +53,9 @@ public class Dictionary<T> {
 			int wordLength = trim.length();
 			for (int i = 1; i < wordLength; i++) {
 				boolean isWord = (i == (wordLength - 1));
-				TrieNode<T> subNode = node.findSubNode(charArray[i]);
+				TrieNode subNode = node.findSubNode(charArray[i]);
 				if (subNode == null) {
-					subNode = new TrieNode<T>(charArray[i], isWord);
+					subNode = new TrieNode(charArray[i], isWord);
 					node.addNode(subNode);
 				} else {
 					if (isWord) {
@@ -77,6 +75,7 @@ public class Dictionary<T> {
 	 * @return 是/否
 	 */
 	public boolean contains(String word) {
+		
 		if (word != null) {
 			
 			String trim = word.trim();
@@ -85,7 +84,7 @@ public class Dictionary<T> {
 			}
 			
 			char[] charArray = trim.toCharArray();
-			TrieNode<T> node = treeMap.get(Character.valueOf(charArray[0]));
+			TrieNode node = treeMap.get(Character.valueOf(charArray[0]));
 			if (node != null) {
 				int wordLength = charArray.length;
 				for (int i = 1; i < wordLength; i++) {

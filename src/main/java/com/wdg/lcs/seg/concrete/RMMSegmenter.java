@@ -3,6 +3,7 @@ package com.wdg.lcs.seg.concrete;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wdg.lcs.common.Utils;
 import com.wdg.lcs.seg.BaseSegmenter;
 import com.wdg.lcs.seg.TermData;
 import com.wdg.lcs.trie.Dictionary;
@@ -21,35 +22,70 @@ public class RMMSegmenter extends BaseSegmenter {
 	}
 
 	@Override
-	public List<TermData> analyze(char[] charArray) {
+	public List<TermData> analyze(char[] array) {
+		
 		List<TermData> dataList = new ArrayList<>();
-		if (charArray == null || charArray.length == 0) {
+		if (array == null || array.length == 0) {
 			return dataList;
 		}
-		int pointer = 0;
-		int strLength = charArray.length;
-		while (pointer < strLength) {
-			int length = strLength - pointer;
+		
+		char[] charArray = Utils.uniformChars(array);
+		int pointer = array.length - 1;
+		
+		while (pointer >= 0) {
+			
+			char c = charArray[pointer];
+			
+			// 无效字符
+			if (!Utils.isValidChar(c)) {
+				pointer -= 1;
+				continue;
+			}
+			
+			// 非中文字符处理
+			if (!Utils.isCommonChinese(c)) {
+				StringBuilder buf = new StringBuilder();
+				buf.insert(0, c);
+				while (pointer >= 0) {
+					pointer -= 1;
+					char cc = charArray[pointer];
+					if (Utils.isValidChar(cc) && !Utils.isCommonChinese(cc)) {
+						buf.insert(0, cc);
+					} else {
+						TermData data = new TermData();
+						data.setTerm(buf.toString());
+						data.setStart(pointer - 1);
+						data.setEnd(pointer + buf.length());
+						dataList.add(data);
+						buf.delete(0, buf.length());
+						break;
+					}
+				}
+				if (pointer >= 0) {
+					continue;
+				}
+			}
+			
 			TermData data = null;
-			for (int l = length; l > 0; l--) {
-				if (dict.contains(charArray, pointer, l)) {
+			for (int i = 0; i < charArray.length; i++) {
+				if (dict.contains(charArray, i, pointer - i + 1)) {
 					data = new TermData();
-					data.setTerm(new String(charArray, pointer, l));
-					data.setStart(pointer);
-					data.setEnd(pointer + l - 1);
+					data.setTerm(new String(charArray, i, pointer - i + 1));
+					data.setStart(i);
+					data.setEnd(pointer);
 					dataList.add(data);
 					break;
 				}
 			}
 			if (data != null) {
-				pointer += data.length();
+				pointer -= data.length();
 			} else {
 				TermData charData = new TermData();
-				charData.setTerm(String.valueOf(charArray[pointer]));
+				charData.setTerm(String.valueOf(c));
 				charData.setStart(pointer);
 				charData.setEnd(pointer);
 				dataList.add(charData);
-				pointer += 1;
+				pointer -= 1;
 			}
 		}
 		return dataList;

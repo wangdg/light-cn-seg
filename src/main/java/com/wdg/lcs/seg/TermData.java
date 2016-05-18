@@ -48,6 +48,6 @@ public class TermData {
 
 	@Override
 	public String toString() {
-		return term;
+		return String.format("%s(%d, %d)", term, start, end);
 	}
 }

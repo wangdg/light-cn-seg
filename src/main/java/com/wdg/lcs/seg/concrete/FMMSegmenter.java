@@ -33,15 +33,38 @@ public class FMMSegmenter extends BaseSegmenter {
 		int pointer = 0;
 		int strLength = charArray.length;
 		
-		StringBuilder invalidBuffer = new StringBuilder();
-		
 		while (pointer < strLength) {
 			
 			char c = charArray[pointer];
+			
+			// 无效字符
 			if (!Utils.isValidChar(c)) {
-				invalidBuffer.append(c);
 				pointer += 1;
 				continue;
+			}
+			
+			// 非中文字符处理
+			if (!Utils.isCommonChinese(c)) {
+				StringBuilder buf = new StringBuilder();
+				buf.append(c);
+				while (pointer < strLength) {
+					pointer += 1;
+					char cc = charArray[pointer];
+					if (Utils.isValidChar(cc) && !Utils.isCommonChinese(cc)) {
+						buf.append(cc);
+					} else {
+						TermData data = new TermData();
+						data.setTerm(buf.toString());
+						data.setStart(pointer - buf.length());
+						data.setEnd(pointer - 1);
+						dataList.add(data);
+						buf.delete(0, buf.length());
+						break;
+					}
+				}
+				if (pointer < strLength) {
+					continue;
+				}
 			}
 			
 			int length = strLength - pointer;

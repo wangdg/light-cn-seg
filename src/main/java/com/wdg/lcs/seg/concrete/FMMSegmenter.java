@@ -6,21 +6,12 @@ import java.util.List;
 import com.wdg.lcs.common.Utils;
 import com.wdg.lcs.seg.BaseSegmenter;
 import com.wdg.lcs.seg.TermData;
-import com.wdg.lcs.trie.Dictionary;
 
 /**
  * 正向最大配置分词
  */
 public class FMMSegmenter extends BaseSegmenter {
 
-	/** 分词词典 */
-	private Dictionary dict;
-	
-	public FMMSegmenter(Dictionary dict) {
-		super();
-		this.dict = dict;
-	}
-	
 	@Override
 	public List<TermData> analyze(char[] array) {
 		

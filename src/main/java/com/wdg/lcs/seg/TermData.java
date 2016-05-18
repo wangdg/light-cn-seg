@@ -3,10 +3,10 @@ package com.wdg.lcs.seg;
 /**
  * 分词单元信息
  */
-public class SegmentData {
+public class TermData {
 
 	/** 分词文本 */
-	private String segment;
+	private String term;
 	
 	/** 开始位置 */
 	private int start;
@@ -15,19 +15,19 @@ public class SegmentData {
 	private int end;
 
 	public int length() {
-		if (segment != null) {
-			return segment.length();
+		if (term != null) {
+			return term.length();
 		} else {
 			return 0;
 		}
 	}
 	
-	public String getSegment() {
-		return segment;
+	public String getTerm() {
+		return term;
 	}
 
-	public void setSegment(String segment) {
-		this.segment = segment;
+	public void setTerm(String term) {
+		this.term = term;
 	}
 
 	public int getStart() {
@@ -48,6 +48,6 @@ public class SegmentData {
 
 	@Override
 	public String toString() {
-		return segment;
+		return term;
 	}
 }

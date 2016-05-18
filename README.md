@@ -8,7 +8,7 @@ LCS中文分词
 
 ## 如何使用
 
-```java
+```
 // 加载词典
 IDictionaryDataSource source = new DictionaryFileDataSource(new File("/Users/wangdg/Documents/main.txt"));
 Dictionary dict = new Dictionary(source);
@@ -21,5 +21,5 @@ List<TermData> segs = segmenter.analyze("测试文字");
 
 ...
 
-```java
+```
 

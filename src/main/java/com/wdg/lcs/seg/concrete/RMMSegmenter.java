@@ -6,20 +6,11 @@ import java.util.List;
 import com.wdg.lcs.common.Utils;
 import com.wdg.lcs.seg.BaseSegmenter;
 import com.wdg.lcs.seg.TermData;
-import com.wdg.lcs.trie.Dictionary;
 
 /**
  * 逆向最大配置分词
  */
 public class RMMSegmenter extends BaseSegmenter {
-
-	/** 分词词典 */
-	private Dictionary dict;
-	
-	public RMMSegmenter(Dictionary dict) {
-		super();
-		this.dict = dict;
-	}
 
 	@Override
 	public List<TermData> analyze(char[] array) {

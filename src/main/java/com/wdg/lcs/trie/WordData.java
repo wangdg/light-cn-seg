@@ -5,25 +5,25 @@ package com.wdg.lcs.trie;
  */
 public class WordData {
 
-	/** 词 */
-	private String text;
-	
-	/** 用户数据 */
-	private Object userData;
+    /** 词 */
+    private String text;
 
-	public String getText() {
-		return text;
-	}
+    /** 用户数据 */
+    private Object userData;
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public Object getUserData() {
-		return userData;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public void setUserData(Object userData) {
-		this.userData = userData;
-	}
+    public Object getUserData() {
+        return userData;
+    }
+
+    public void setUserData(Object userData) {
+        this.userData = userData;
+    }
 }

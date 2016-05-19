@@ -5,49 +5,49 @@ package com.wdg.lcs.seg;
  */
 public class TermData {
 
-	/** 分词文本 */
-	private String term;
-	
-	/** 开始位置 */
-	private int start;
-	
-	/** 结束位置 */
-	private int end;
+    /** 分词文本 */
+    private String term;
 
-	public int length() {
-		if (term != null) {
-			return term.length();
-		} else {
-			return 0;
-		}
-	}
-	
-	public String getTerm() {
-		return term;
-	}
+    /** 开始位置 */
+    private int start;
 
-	public void setTerm(String term) {
-		this.term = term;
-	}
+    /** 结束位置 */
+    private int end;
 
-	public int getStart() {
-		return start;
-	}
+    public int length() {
+        if (term != null) {
+            return term.length();
+        } else {
+            return 0;
+        }
+    }
 
-	public void setStart(int start) {
-		this.start = start;
-	}
+    public String getTerm() {
+        return term;
+    }
 
-	public int getEnd() {
-		return end;
-	}
+    public void setTerm(String term) {
+        this.term = term;
+    }
 
-	public void setEnd(int end) {
-		this.end = end;
-	}
+    public int getStart() {
+        return start;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("%s(%d, %d)", term, start, end);
-	}
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(%d, %d)", term, start, end);
+    }
 }

@@ -10,9 +10,9 @@ import junit.framework.TestCase;
 
 public class DictionaryTest extends TestCase {
 
-	public void test01() {
-		IDictionaryDataSource source = new DictionaryFileDataSource(new File("/Users/wangdg/Documents/main.txt"));
-		Dictionary dict = new Dictionary(source);
-		System.out.println(dict.contains("北京"));
-	}
+    public void test01() {
+        IDictionaryDataSource source = new DictionaryFileDataSource(new File("/Users/wangdg/Documents/main.txt"));
+        Dictionary dict = new Dictionary(source);
+        System.out.println(dict.contains("北京"));
+    }
 }

@@ -1,4 +1,4 @@
-package com.wdg.lcs.trie;
+package com.wangdg.lcs.trie;
 
 /**
  * 词语数据

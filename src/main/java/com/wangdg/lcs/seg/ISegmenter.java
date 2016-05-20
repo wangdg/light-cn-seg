@@ -1,4 +1,4 @@
-package com.wdg.lcs.seg;
+package com.wangdg.lcs.seg;
 
 import java.util.List;
 

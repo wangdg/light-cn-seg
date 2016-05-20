@@ -1,10 +1,10 @@
-package com.wdg.lcs;
+package com.wangdg.lcs;
 
 import java.io.File;
 
-import com.wdg.lcs.trie.Dictionary;
-import com.wdg.lcs.trie.DictionaryFileDataSource;
-import com.wdg.lcs.trie.IDictionaryDataSource;
+import com.wangdg.lcs.trie.Dictionary;
+import com.wangdg.lcs.trie.DictionaryFileDataSource;
+import com.wangdg.lcs.trie.IDictionaryDataSource;
 
 import junit.framework.TestCase;
 

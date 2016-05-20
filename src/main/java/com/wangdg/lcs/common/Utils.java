@@ -1,4 +1,4 @@
-package com.wdg.lcs.common;
+package com.wangdg.lcs.common;
 
 import java.io.BufferedReader;
 import java.io.File;

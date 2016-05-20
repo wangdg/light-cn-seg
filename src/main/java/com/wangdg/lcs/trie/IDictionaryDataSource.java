@@ -1,4 +1,4 @@
-package com.wdg.lcs.trie;
+package com.wangdg.lcs.trie;
 
 /**
  * 字典数据源接口

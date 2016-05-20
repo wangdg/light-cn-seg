@@ -1,16 +1,16 @@
-package com.wdg.lcs.seg.concrete;
+package com.wangdg.lcs.seg.concrete;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.wdg.lcs.common.Utils;
-import com.wdg.lcs.seg.BaseSegmenter;
-import com.wdg.lcs.seg.TermData;
+import com.wangdg.lcs.common.Utils;
+import com.wangdg.lcs.seg.BaseSegmenter;
+import com.wangdg.lcs.seg.TermData;
 
 /**
- * 正向最大配置分词
+ * 逆向最大配置分词
  */
-public class FMMSegmenter extends BaseSegmenter {
+public class RMMSegmenter extends BaseSegmenter {
 
     @Override
     public List<TermData> analyze(char[] array) {
@@ -21,64 +21,62 @@ public class FMMSegmenter extends BaseSegmenter {
         }
 
         char[] charArray = Utils.uniformChars(array);
-        int pointer = 0;
-        int strLength = charArray.length;
+        int pointer = array.length - 1;
 
-        while (pointer < strLength) {
+        while (pointer >= 0) {
 
             char c = charArray[pointer];
 
             // 无效字符
             if (!Utils.isValidChar(c)) {
-                pointer += 1;
+                pointer -= 1;
                 continue;
             }
 
             // 非中文字符处理
             if (!Utils.isCommonChinese(c)) {
                 StringBuilder buf = new StringBuilder();
-                buf.append(c);
-                while (pointer < strLength) {
-                    pointer += 1;
+                buf.insert(0, c);
+                while (pointer >= 0) {
+                    pointer -= 1;
                     char cc = charArray[pointer];
                     if (Utils.isValidChar(cc) && !Utils.isCommonChinese(cc)) {
-                        buf.append(cc);
+                        buf.insert(0, cc);
                     } else {
                         TermData data = new TermData();
                         data.setTerm(buf.toString());
-                        data.setStart(pointer - buf.length());
-                        data.setEnd(pointer - 1);
+                        data.setStart(pointer - 1);
+                        data.setEnd(pointer + buf.length());
                         dataList.add(data);
                         buf.delete(0, buf.length());
                         break;
                     }
                 }
-                if (pointer < strLength) {
+                if (pointer >= 0) {
                     continue;
                 }
             }
 
-            int length = strLength - pointer;
             TermData data = null;
-            for (int l = length; l > 0; l--) {
-                if (dict.contains(charArray, pointer, l)) {
+            for (int i = 0; i < charArray.length; i++) {
+                if (dict.contains(charArray, i, pointer - i + 1)) {
                     data = new TermData();
-                    data.setTerm(new String(charArray, pointer, l));
-                    data.setStart(pointer);
-                    data.setEnd(pointer + l - 1);
+                    data.setTerm(new String(charArray, i, pointer - i + 1));
+                    data.setStart(i);
+                    data.setEnd(pointer);
                     dataList.add(data);
                     break;
                 }
             }
             if (data != null) {
-                pointer += data.length();
+                pointer -= data.length();
             } else {
                 TermData charData = new TermData();
                 charData.setTerm(String.valueOf(c));
                 charData.setStart(pointer);
                 charData.setEnd(pointer);
                 dataList.add(charData);
-                pointer += 1;
+                pointer -= 1;
             }
         }
         return dataList;

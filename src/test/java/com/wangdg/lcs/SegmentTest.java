@@ -1,11 +1,11 @@
-package com.wdg.lcs;
+package com.wangdg.lcs;
 
 import java.util.List;
 
-import com.wdg.lcs.seg.ISegmenter;
-import com.wdg.lcs.seg.TermData;
-import com.wdg.lcs.seg.concrete.FMMSegmenter;
-import com.wdg.lcs.seg.concrete.RMMSegmenter;
+import com.wangdg.lcs.seg.ISegmenter;
+import com.wangdg.lcs.seg.TermData;
+import com.wangdg.lcs.seg.concrete.FMMSegmenter;
+import com.wangdg.lcs.seg.concrete.RMMSegmenter;
 
 import junit.framework.TestCase;
 

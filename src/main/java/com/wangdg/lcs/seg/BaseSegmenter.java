@@ -1,11 +1,11 @@
-package com.wdg.lcs.seg;
+package com.wangdg.lcs.seg;
 
 import java.io.File;
 import java.util.List;
 
-import com.wdg.lcs.trie.Dictionary;
-import com.wdg.lcs.trie.DictionaryFileDataSource;
-import com.wdg.lcs.trie.IDictionaryDataSource;
+import com.wangdg.lcs.trie.Dictionary;
+import com.wangdg.lcs.trie.DictionaryFileDataSource;
+import com.wangdg.lcs.trie.IDictionaryDataSource;
 
 /**
  * 分词器基类

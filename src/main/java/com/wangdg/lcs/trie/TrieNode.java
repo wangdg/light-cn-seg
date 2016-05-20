@@ -1,4 +1,4 @@
-package com.wdg.lcs.trie;
+package com.wangdg.lcs.trie;
 
 import java.util.HashMap;
 import java.util.Map;

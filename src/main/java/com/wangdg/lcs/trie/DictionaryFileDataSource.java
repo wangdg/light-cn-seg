@@ -1,11 +1,11 @@
-package com.wdg.lcs.trie;
+package com.wangdg.lcs.trie;
 
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
-import com.wdg.lcs.common.DataInitException;
-import com.wdg.lcs.common.Utils;
+import com.wangdg.lcs.common.DataInitException;
+import com.wangdg.lcs.common.Utils;
 
 /**
  * 文件字典源

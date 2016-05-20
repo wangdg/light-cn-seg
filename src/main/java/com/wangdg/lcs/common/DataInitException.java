@@ -1,4 +1,4 @@
-package com.wdg.lcs.common;
+package com.wangdg.lcs.common;
 
 /**
  * 数据初始化异常

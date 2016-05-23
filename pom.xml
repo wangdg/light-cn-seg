@@ -4,7 +4,7 @@
 
 	<groupId>com.wangdg</groupId>
 	<artifactId>light-cn-seg</artifactId>
-	<version>0.0.4</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>light-cn-seg</name>
@@ -13,6 +13,19 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>maven-cental-release</id>
+			<name>maven-cental-release</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+		<snapshotRepository>
+			<id>maven-cental-snapshots</id>
+			<name>maven-cental-snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>

@@ -5,6 +5,8 @@ import java.util.Map;
 
 /**
  * Trie树结点类
+ * 
+ * @author wangdg
  */
 public class TrieNode {
 

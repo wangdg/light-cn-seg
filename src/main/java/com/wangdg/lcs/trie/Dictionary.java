@@ -5,6 +5,8 @@ import java.util.Map;
 
 /**
  * 词典类
+ * 
+ * @author wangdg
  */
 public class Dictionary {
 

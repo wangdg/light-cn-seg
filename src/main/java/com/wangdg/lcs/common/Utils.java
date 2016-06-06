@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * 工具类
+ * 
+ * @author wangdg
  */
 public class Utils {
 

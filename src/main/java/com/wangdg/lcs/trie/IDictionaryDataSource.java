@@ -2,6 +2,8 @@ package com.wangdg.lcs.trie;
 
 /**
  * 字典数据源接口
+ * 
+ * @author wangdg
  */
 public interface IDictionaryDataSource {
 

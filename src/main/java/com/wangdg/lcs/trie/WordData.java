@@ -2,6 +2,8 @@ package com.wangdg.lcs.trie;
 
 /**
  * 词语数据
+ * 
+ * @author wangdg
  */
 public class WordData {
 

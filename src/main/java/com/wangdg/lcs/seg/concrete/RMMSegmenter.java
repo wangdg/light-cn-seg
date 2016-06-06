@@ -9,6 +9,8 @@ import com.wangdg.lcs.seg.TermData;
 
 /**
  * 逆向最大配置分词
+ * 
+ * @author wangdg
  */
 public class RMMSegmenter extends BaseSegmenter {
 
@@ -43,12 +45,9 @@ public class RMMSegmenter extends BaseSegmenter {
                     if (Utils.isValidChar(cc) && !Utils.isCommonChinese(cc)) {
                         buf.insert(0, cc);
                     } else {
-                        TermData data = new TermData();
-                        data.setTerm(buf.toString());
-                        data.setStart(pointer - 1);
-                        data.setEnd(pointer + buf.length());
+                        TermData data = TermData.create(
+                                buf.toString(), pointer - 1, pointer + buf.length());
                         dataList.add(data);
-                        buf.delete(0, buf.length());
                         break;
                     }
                 }
@@ -68,13 +67,11 @@ public class RMMSegmenter extends BaseSegmenter {
                     break;
                 }
             }
+            
             if (data != null) {
                 pointer -= data.length();
             } else {
-                TermData charData = new TermData();
-                charData.setTerm(String.valueOf(c));
-                charData.setStart(pointer);
-                charData.setEnd(pointer);
+                TermData charData = TermData.create(String.valueOf(c), pointer, pointer);
                 dataList.add(charData);
                 pointer -= 1;
             }

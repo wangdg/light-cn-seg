@@ -9,6 +9,8 @@ import com.wangdg.lcs.trie.IDictionaryDataSource;
 
 /**
  * 分词器基类
+ * 
+ * @author wangdg
  */
 public abstract class BaseSegmenter implements ISegmenter {
 

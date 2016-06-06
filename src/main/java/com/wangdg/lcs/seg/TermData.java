@@ -2,6 +2,8 @@ package com.wangdg.lcs.seg;
 
 /**
  * 分词单元信息
+ * 
+ * @author wangdg
  */
 public class TermData {
 
@@ -14,6 +16,18 @@ public class TermData {
     /** 结束位置 */
     private int end;
 
+    public static TermData create(String term, int start, int end) {
+        if (term != null) {
+            TermData data = new TermData();
+            data.setTerm(term);
+            data.setStart(start);
+            data.setEnd(end);
+            return data;
+        } else {
+            return null;
+        }
+    }
+    
     public int length() {
         if (term != null) {
             return term.length();

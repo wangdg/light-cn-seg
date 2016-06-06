@@ -9,6 +9,8 @@ import com.wangdg.lcs.common.Utils;
 
 /**
  * 文件字典源
+ * 
+ * @author wangdg
  */
 public class DictionaryFileDataSource implements IDictionaryDataSource {
 

@@ -8,11 +8,9 @@ import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
 
 /**
- * 正向最大配置分词
- * 
- * @author wangdg
+ * 中文单词分词算法
  */
-public class FMMSegmenter extends BaseSegmenter {
+public class ICCSegmenter extends BaseSegmenter {
 
     @Override
     public List<TermData> analyze(char[] array) {
@@ -59,29 +57,12 @@ public class FMMSegmenter extends BaseSegmenter {
                 }
             }
 
-            int length = strLength - pointer;
-            TermData data = null;
-            for (int l = length; l > 0; l--) {
-                if (dict.contains(charArray, pointer, l)) {
-                    data = new TermData();
-                    data.setTerm(new String(charArray, pointer, l));
-                    data.setStart(pointer);
-                    data.setEnd(pointer + l - 1);
-                    dataList.add(data);
-                    break;
-                }
-            }
-            if (data != null) {
-                pointer += data.length();
-            } else {
-                TermData charData = new TermData();
-                charData.setTerm(String.valueOf(c));
-                charData.setStart(pointer);
-                charData.setEnd(pointer);
-                dataList.add(charData);
-                pointer += 1;
-            }
+            TermData data = TermData.create(String.valueOf(c), pointer, pointer);
+            dataList.add(data);
+            
+            pointer += 1;
         }
         return dataList;
+
     }
 }

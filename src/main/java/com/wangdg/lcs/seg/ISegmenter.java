@@ -4,6 +4,8 @@ import java.util.List;
 
 /**
  * 分词器接口
+ * 
+ * @author wangdg
  */
 public interface ISegmenter {
 

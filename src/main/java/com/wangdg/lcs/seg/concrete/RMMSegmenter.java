@@ -19,6 +19,10 @@ public class RMMSegmenter extends BaseSegmenter {
         super(dict);
     }
     
+    public RMMSegmenter() {
+        super();
+    }
+    
     @Override
     public List<TermData> analyze(char[] array) {
 

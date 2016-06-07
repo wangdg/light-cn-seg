@@ -19,6 +19,10 @@ public class FMMSegmenter extends BaseSegmenter {
         super(dict);
     }
     
+    public FMMSegmenter() {
+        super();
+    }
+    
     @Override
     public List<TermData> analyze(char[] array) {
 

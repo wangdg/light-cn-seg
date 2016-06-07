@@ -3,7 +3,7 @@ LCS中文分词
 
 ## 1.简单介绍
 
-- LCS = Light Chinese Segmenter。
+- LCS = Lightweight Chinese Segmenter。
 - 简单的中文分词器。
 
 ## 2.如何使用
@@ -33,12 +33,39 @@ List<TermData> segs = segmenter.analyze("测试文字");
 ### 2.3 使用自定义词典分词
 
 ```
-// 指定词典来源
-IDictionaryDataSource source = new DictionaryFileDataSource(new File("/main.txt"));
+// 创建词典
+Dictionary dict = ...;
 // 创建分词器
-ISegmenter segmenter = new FMMSegmenter(source);
+ISegmenter segmenter = new FMMSegmenter(dict);
 // 分词得到结果
 List<TermData> segs = segmenter.analyze("测试文字");
 ...
 
 ```
+
+## 3.Solr支持
+
+### 3.1 Analyzer
+
+支持的分析器(Analyzer)有：
+
+- FMMAnalyzer
+- RMMAnalyzer
+- ICCAnalyzer
+
+### 3.2 schema.xml：
+
+```
+<fieldType name="lcg_fmm" class="solr.TextField">
+    <analyzer class="com.wangdg.lcs.solr.FMMAnalyzer" />
+</fieldType>
+
+<fieldType name="lcg_rmm" class="solr.TextField">
+    <analyzer class="com.wangdg.lcs.solr.RMMAnalyzer" />
+</fieldType>
+
+<fieldType name="lcg_fmm" class="solr.TextField">
+    <analyzer class="com.wangdg.lcs.solr.ICCAnalyzer" />
+</fieldType>
+```
+

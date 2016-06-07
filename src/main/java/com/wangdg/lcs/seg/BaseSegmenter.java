@@ -19,6 +19,11 @@ public abstract class BaseSegmenter implements ISegmenter {
         dictionary = dict;
     }
     
+    public BaseSegmenter() {
+        super();
+        dictionary = Dictionary.loadDefaultDictionary();
+    }
+    
     @Override
     public List<TermData> analyze(String text) {
         if (text != null) {

@@ -96,5 +96,6 @@ public class LCSTokenizer extends Tokenizer {
     public void reset() throws IOException {
         super.reset();
         pointer = 0;
+        termDataList = null;
     }
 }

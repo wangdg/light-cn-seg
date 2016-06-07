@@ -12,6 +12,10 @@ import com.wangdg.lcs.seg.TermData;
  */
 public class ICCSegmenter extends BaseSegmenter {
 
+    public ICCSegmenter() {
+        super(null);
+    }
+
     @Override
     public List<TermData> analyze(char[] array) {
 
@@ -22,47 +26,41 @@ public class ICCSegmenter extends BaseSegmenter {
 
         char[] charArray = Utils.uniformChars(array);
         int pointer = 0;
-        int strLength = charArray.length;
+        StringBuffer nonCNBuffer = new StringBuffer();
 
-        while (pointer < strLength) {
+        while (pointer < charArray.length) {
 
             char c = charArray[pointer];
 
             // 无效字符
             if (!Utils.isValidChar(c)) {
+                this.handleNonCNBuffer(nonCNBuffer,
+                        pointer - nonCNBuffer.length(), dataList);
+                pointer += 1;
+                continue;
+            }
+            
+            // 非中文字符处理
+            if (!Utils.isCommonChinese(c)) {
+                nonCNBuffer.append(c);
                 pointer += 1;
                 continue;
             }
 
-            // 非中文字符处理
-            if (!Utils.isCommonChinese(c)) {
-                StringBuilder buf = new StringBuilder();
-                buf.append(c);
-                while (pointer < strLength) {
-                    pointer += 1;
-                    char cc = charArray[pointer];
-                    if (Utils.isValidChar(cc) && !Utils.isCommonChinese(cc)) {
-                        buf.append(cc);
-                    } else {
-                        TermData data = new TermData();
-                        data.setTerm(buf.toString());
-                        data.setStart(pointer - buf.length());
-                        data.setEnd(pointer - 1);
-                        dataList.add(data);
-                        break;
-                    }
-                }
-                if (pointer < strLength) {
-                    continue;
-                }
-            }
+            // 处理非中文Buffer
+            this.handleNonCNBuffer(nonCNBuffer,
+                    pointer - nonCNBuffer.length(), dataList);
 
             TermData data = TermData.create(String.valueOf(c), pointer, pointer);
             dataList.add(data);
             
             pointer += 1;
         }
+        
+        // 处理非中文Buffer
+        this.handleNonCNBuffer(nonCNBuffer,
+                pointer - nonCNBuffer.length(), dataList);
+        
         return dataList;
-
     }
 }

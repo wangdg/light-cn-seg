@@ -6,6 +6,7 @@ import java.util.List;
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
+import com.wangdg.lcs.trie.Dictionary;
 
 /**
  * 正向最大配置分词
@@ -14,6 +15,10 @@ import com.wangdg.lcs.seg.TermData;
  */
 public class FMMSegmenter extends BaseSegmenter {
 
+    public FMMSegmenter(Dictionary dict) {
+        super(dict);
+    }
+    
     @Override
     public List<TermData> analyze(char[] array) {
 
@@ -24,45 +29,35 @@ public class FMMSegmenter extends BaseSegmenter {
 
         char[] charArray = Utils.uniformChars(array);
         int pointer = 0;
-        int strLength = charArray.length;
+        StringBuffer nonCNBuffer = new StringBuffer();
 
-        while (pointer < strLength) {
+        while (pointer < charArray.length) {
 
             char c = charArray[pointer];
 
             // 无效字符
             if (!Utils.isValidChar(c)) {
+                this.handleNonCNBuffer(nonCNBuffer,
+                        pointer - nonCNBuffer.length(), dataList);
                 pointer += 1;
                 continue;
             }
 
             // 非中文字符处理
             if (!Utils.isCommonChinese(c)) {
-                StringBuilder buf = new StringBuilder();
-                buf.append(c);
-                while (pointer < strLength) {
-                    pointer += 1;
-                    char cc = charArray[pointer];
-                    if (Utils.isValidChar(cc) && !Utils.isCommonChinese(cc)) {
-                        buf.append(cc);
-                    } else {
-                        TermData data = new TermData();
-                        data.setTerm(buf.toString());
-                        data.setStart(pointer - buf.length());
-                        data.setEnd(pointer - 1);
-                        dataList.add(data);
-                        break;
-                    }
-                }
-                if (pointer < strLength) {
-                    continue;
-                }
+                nonCNBuffer.append(c);
+                pointer += 1;
+                continue;
             }
+            
+            // 处理非中文Buffer
+            this.handleNonCNBuffer(nonCNBuffer,
+                    pointer - nonCNBuffer.length(), dataList);
 
-            int length = strLength - pointer;
+            int length = charArray.length - pointer;
             TermData data = null;
             for (int l = length; l > 0; l--) {
-                if (dict.contains(charArray, pointer, l)) {
+                if (dictionary.contains(charArray, pointer, l)) {
                     data = new TermData();
                     data.setTerm(new String(charArray, pointer, l));
                     data.setStart(pointer);
@@ -82,6 +77,11 @@ public class FMMSegmenter extends BaseSegmenter {
                 pointer += 1;
             }
         }
+        
+        // 处理非中文Buffer
+        this.handleNonCNBuffer(nonCNBuffer,
+                pointer - nonCNBuffer.length(), dataList);
+        
         return dataList;
     }
 }

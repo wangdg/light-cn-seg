@@ -6,6 +6,7 @@ import java.util.List;
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
+import com.wangdg.lcs.trie.Dictionary;
 
 /**
  * 逆向最大配置分词
@@ -14,6 +15,10 @@ import com.wangdg.lcs.seg.TermData;
  */
 public class RMMSegmenter extends BaseSegmenter {
 
+    public RMMSegmenter(Dictionary dict) {
+        super(dict);
+    }
+    
     @Override
     public List<TermData> analyze(char[] array) {
 
@@ -24,6 +29,7 @@ public class RMMSegmenter extends BaseSegmenter {
 
         char[] charArray = Utils.uniformChars(array);
         int pointer = array.length - 1;
+        StringBuffer nonCNBuffer = new StringBuffer();
 
         while (pointer >= 0) {
 
@@ -31,34 +37,24 @@ public class RMMSegmenter extends BaseSegmenter {
 
             // 无效字符
             if (!Utils.isValidChar(c)) {
+                this.handleNonCNBuffer(nonCNBuffer, pointer + 1, dataList);
                 pointer -= 1;
                 continue;
             }
-
+            
             // 非中文字符处理
             if (!Utils.isCommonChinese(c)) {
-                StringBuilder buf = new StringBuilder();
-                buf.insert(0, c);
-                while (pointer >= 0) {
-                    pointer -= 1;
-                    char cc = charArray[pointer];
-                    if (Utils.isValidChar(cc) && !Utils.isCommonChinese(cc)) {
-                        buf.insert(0, cc);
-                    } else {
-                        TermData data = TermData.create(
-                                buf.toString(), pointer - 1, pointer + buf.length());
-                        dataList.add(data);
-                        break;
-                    }
-                }
-                if (pointer >= 0) {
-                    continue;
-                }
+                nonCNBuffer.insert(0, c);
+                pointer -= 1;
+                continue;
             }
+            
+            // 处理非中文Buffer
+            this.handleNonCNBuffer(nonCNBuffer, pointer + 1, dataList);
 
             TermData data = null;
             for (int i = 0; i < charArray.length; i++) {
-                if (dict.contains(charArray, i, pointer - i + 1)) {
+                if (dictionary.contains(charArray, i, pointer - i + 1)) {
                     data = new TermData();
                     data.setTerm(new String(charArray, i, pointer - i + 1));
                     data.setStart(i);
@@ -76,6 +72,10 @@ public class RMMSegmenter extends BaseSegmenter {
                 pointer -= 1;
             }
         }
+        
+        // 处理非中文Buffer
+        this.handleNonCNBuffer(nonCNBuffer, 0, dataList);
+        
         return dataList;
     }
 }

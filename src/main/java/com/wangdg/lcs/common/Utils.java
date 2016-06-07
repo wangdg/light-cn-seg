@@ -35,15 +35,17 @@ public class Utils {
             }
             return list;
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             return null;
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    // do nothing
+                    e.printStackTrace();
                 }
             }
         }
@@ -75,7 +77,7 @@ public class Utils {
      * @return 是/否
      */
     public static boolean isDigit(char c) {
-        return isFullWidthDigit(c) || isHalfWidthDigit(c);
+        return isFullWidthDigit(c) || isHalfWidthDigit(c) || c == '.';
     }
 
     private static boolean isFullWidthDigit(char c) {

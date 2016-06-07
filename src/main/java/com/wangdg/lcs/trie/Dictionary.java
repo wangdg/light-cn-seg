@@ -1,7 +1,14 @@
 package com.wangdg.lcs.trie;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.wangdg.lcs.common.DataInitException;
 
 /**
  * 词典类
@@ -13,6 +20,38 @@ public class Dictionary {
     /** Tree Map */
     private Map<Character, TrieNode> treeMap = new HashMap<Character, TrieNode>();
 
+    public static Dictionary loadDefaultDictionary() {
+        
+        Dictionary dict = new Dictionary();
+        
+        InputStream in = Dictionary.class.getClassLoader().getResourceAsStream("main.dic");
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in , "UTF-8"), 512);
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                dict.addWord(line, null);
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new DataInitException("Dictionary Init Error!");
+        } catch (IOException e) {
+            throw new DataInitException("Dictionary Init Error!");
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    // do nothing
+                }
+            }
+        }
+        
+        return dict;
+    }
+    
+    public Dictionary() {
+        super();
+    }
+    
     /**
      * 通过文件构建词典
      * 

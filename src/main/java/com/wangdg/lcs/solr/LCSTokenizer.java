@@ -10,7 +10,6 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 
 import com.wangdg.lcs.seg.ISegmenter;
-import com.wangdg.lcs.seg.SegmenterManager;
 import com.wangdg.lcs.seg.TermData;
 
 /**
@@ -32,12 +31,12 @@ public class LCSTokenizer extends Tokenizer {
     /** 指针 */
     private int pointer;
 
-    /** 分语策略 */
-    private String segmentPolicy;
+    /** 分语器 */
+    private ISegmenter segmenter;
 
-    public LCSTokenizer(Reader input, String policy) {
+    public LCSTokenizer(Reader input, ISegmenter seg) {
         super(input);
-        segmentPolicy = policy;
+        segmenter = seg;
         termAttr = this.addAttribute(CharTermAttribute.class);
         offsetAttr = this.addAttribute(OffsetAttribute.class);
         pointer = 0;
@@ -47,7 +46,7 @@ public class LCSTokenizer extends Tokenizer {
     public boolean incrementToken() throws IOException {
 
         if (termDataList == null) {
-            termDataList = this.getTermDataList(input, segmentPolicy);
+            termDataList = this.getTermDataList(input, segmenter);
         }
 
         this.clearAttributes();
@@ -56,6 +55,7 @@ public class LCSTokenizer extends Tokenizer {
             termAttr.append(term.getTerm());
             termAttr.setLength(term.getTerm().length());
             offsetAttr.setOffset(term.getStart(), term.getEnd());
+            pointer += 1;
             return true;
         } else {
             return false;
@@ -67,22 +67,19 @@ public class LCSTokenizer extends Tokenizer {
      * 
      * @param reader
      *            文本Reader
-     * @param policy
-     *            分词策略
+     * @param seg
+     *            分词器
      * @return 分词列表
      * @throws IOException
      *             异常
      */
-    protected List<TermData> getTermDataList(Reader reader, String policy) throws IOException {
+    protected List<TermData> getTermDataList(Reader reader, ISegmenter seg) throws IOException {
 
         // 分词列表
         List<TermData> list = new ArrayList<TermData>();
         if (reader == null) {
             return list;
         }
-
-        // 取得分词器
-        ISegmenter segmenter = SegmenterManager.getInstance().getSegmenter(policy);
 
         // 读取文本
         StringBuilder textBuf = new StringBuilder();
@@ -92,7 +89,7 @@ public class LCSTokenizer extends Tokenizer {
             textBuf.append(charBuf, 0, readSize);
         }
 
-        return segmenter.analyze(textBuf.toString());
+        return seg.analyze(textBuf.toString());
     }
 
     @Override

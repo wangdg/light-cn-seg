@@ -13,6 +13,9 @@ tmp/
 local.properties
 .settings/
 .loadpath
+# Idea
+.idea/
+*.iml
 # Eclipse Core
 .project
 # External tool builders

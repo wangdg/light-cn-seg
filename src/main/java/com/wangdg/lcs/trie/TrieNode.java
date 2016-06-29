@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Trie树结点类
- * 
+ *
  * @author wangdg
  */
 public class TrieNode {
@@ -20,11 +20,11 @@ public class TrieNode {
     private boolean word = false;
 
     /** 用户数据 */
-    private Object userData;
+    private UserData userData;
 
     /**
      * 构造方法
-     * 
+     *
      * @param ch
      *            字符
      * @param isWord
@@ -38,7 +38,7 @@ public class TrieNode {
 
     /**
      * 追加结点
-     * 
+     *
      * @param node
      *            结点对象
      */
@@ -50,7 +50,7 @@ public class TrieNode {
 
     /**
      * 取得结点字符数据
-     * 
+     *
      * @return 字符数据
      */
     public Character getCharacter() {
@@ -59,7 +59,7 @@ public class TrieNode {
 
     /**
      * 通过字符找相应子结点
-     * 
+     *
      * @param ch
      *            字符
      * @return 子结点对象
@@ -70,7 +70,7 @@ public class TrieNode {
 
     /**
      * 设置是否成词
-     * 
+     *
      * @param yes
      *            是/否
      */
@@ -80,7 +80,7 @@ public class TrieNode {
 
     /**
      * 是否成词
-     * 
+     *
      * @return 是/否
      */
     public boolean isWord() {
@@ -89,20 +89,20 @@ public class TrieNode {
 
     /**
      * 取得用户数据
-     * 
+     *
      * @return 用户数据
      */
-    public Object getUserData() {
+    public UserData getUserData() {
         return userData;
     }
 
     /**
      * 设置用户数据
-     * 
+     *
      * @param userData
      *            用户数据
      */
-    public void setUserData(Object userData) {
+    public void setUserData(UserData userData) {
         this.userData = userData;
     }
 }

@@ -2,7 +2,7 @@ package com.wangdg.lcs.trie;
 
 /**
  * 词语数据
- * 
+ *
  * @author wangdg
  */
 public class WordData {
@@ -11,7 +11,7 @@ public class WordData {
     private String text;
 
     /** 用户数据 */
-    private Object userData;
+    private UserData userData;
 
     public String getText() {
         return text;
@@ -21,11 +21,11 @@ public class WordData {
         this.text = text;
     }
 
-    public Object getUserData() {
+    public UserData getUserData() {
         return userData;
     }
 
-    public void setUserData(Object userData) {
+    public void setUserData(UserData userData) {
         this.userData = userData;
     }
 }

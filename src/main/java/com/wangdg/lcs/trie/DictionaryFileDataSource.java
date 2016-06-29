@@ -1,6 +1,7 @@
 package com.wangdg.lcs.trie;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import com.wangdg.lcs.common.Utils;
 
 /**
  * 文件字典源
- * 
+ *
  * @author wangdg
  */
 public class DictionaryFileDataSource implements IDictionaryDataSource {
@@ -19,7 +20,7 @@ public class DictionaryFileDataSource implements IDictionaryDataSource {
 
     /**
      * 构造方法
-     * 
+     *
      * @param file
      *            目标文件
      * @throws DataInitException
@@ -28,8 +29,15 @@ public class DictionaryFileDataSource implements IDictionaryDataSource {
     public DictionaryFileDataSource(File file) throws DataInitException {
         super();
         List<String> lines = Utils.readFileLines(file);
+        List<String> validLines = new ArrayList<String>();
+        for (String line : lines) {
+            String trimmed = line.trim();
+            if (!trimmed.startsWith("#")) {
+                validLines.add(trimmed);
+            }
+        }
         if (lines != null) {
-            iterator = lines.iterator();
+            iterator = validLines.iterator();
         } else {
             throw new DataInitException("Dictionary Init Error!");
         }
@@ -42,10 +50,7 @@ public class DictionaryFileDataSource implements IDictionaryDataSource {
 
     @Override
     public WordData next() {
-        String word = iterator.next();
-        WordData data = new WordData();
-        data.setText(word);
-        data.setUserData(word);
-        return data;
+        String line = iterator.next();
+        return Utils.convertToWordData(line);
     }
 }

@@ -1,23 +1,25 @@
 package com.wangdg.lcs.common;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.wangdg.lcs.trie.UserData;
+import com.wangdg.lcs.trie.WordData;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 工具类
- * 
+ *
  * @author wangdg
  */
 public class Utils {
 
     /**
      * 读取文件内空
-     * 
+     *
      * @param file
      *            文件对象
      * @return 行内容字符串数组
@@ -53,7 +55,7 @@ public class Utils {
 
     /**
      * 判断字符串是不是空
-     * 
+     *
      * @param str
      *            目标字符串
      * @return 是/否
@@ -71,7 +73,7 @@ public class Utils {
 
     /**
      * 字符是否为数字
-     * 
+     *
      * @param c
      *            字符
      * @return 是/否
@@ -90,7 +92,7 @@ public class Utils {
 
     /**
      * 字符是否为常用汉字
-     * 
+     *
      * @param c
      *            字符
      * @return 是/否
@@ -105,7 +107,7 @@ public class Utils {
 
     /**
      * 字符是否为英文字符
-     * 
+     *
      * @param c
      *            字符
      * @return 是/否
@@ -124,7 +126,7 @@ public class Utils {
 
     /**
      * 字符是否有效
-     * 
+     *
      * @param c
      *            字符
      * @return 是/否
@@ -135,7 +137,7 @@ public class Utils {
 
     /**
      * 标准化字符串
-     * 
+     *
      * @return 字符串
      */
     public static String uniformString(String str) {
@@ -147,7 +149,7 @@ public class Utils {
 
     /**
      * 标准化字符数组
-     * 
+     *
      * @return 字符数组
      */
     public static char[] uniformChars(char[] array) {
@@ -172,5 +174,46 @@ public class Utils {
             retArray[i] = c;
         }
         return retArray;
+    }
+
+    /**
+     * 解析字符串到WordData
+     *
+     * @param str 字符串
+     * @return WordData
+     */
+    public static WordData convertToWordData(String str) {
+        if (str == null) {
+            return null;
+        }
+        String trimmed = str.trim();
+        if (trimmed.length() > 0) {
+            String[] array = str.split(":");
+
+            WordData word = new WordData();
+            word.setText(array[0]);
+
+            if (array.length > 1) {
+                String json = array[1].trim();
+                if (json.length() > 0) {
+                    try {
+                        JSONObject jsonObject = JSON.parseObject(json);
+                        Set<String> keys = jsonObject.keySet();
+                        if (!keys.isEmpty()) {
+                            UserData userData = new UserData();
+                            for (String key : keys) {
+                                userData.put(key, jsonObject.getString(key));
+                            }
+                            word.setUserData(userData);
+                        }
+                    } catch (Exception e) {
+                        // do nothing
+                    }
+                }
+            }
+            return word;
+        } else {
+            return null;
+        }
     }
 }

@@ -16,16 +16,16 @@ import com.wangdg.lcs.common.Utils;
  *
  * @author wangdg
  */
-public class Dictionary {
+public class LCSDictionary {
 
     /** Tree Map */
     private Map<Character, TrieNode> treeMap = new HashMap<Character, TrieNode>();
 
-    public static Dictionary loadDefaultDictionary() {
+    public static LCSDictionary loadDefaultDictionary() {
 
-        Dictionary dict = new Dictionary();
+        LCSDictionary dict = new LCSDictionary();
 
-        InputStream in = Dictionary.class.getClassLoader().getResourceAsStream("main.dic");
+        InputStream in = LCSDictionary.class.getClassLoader().getResourceAsStream("main.dic");
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in , "UTF-8"), 512);
             String line = null;
@@ -53,7 +53,7 @@ public class Dictionary {
         return dict;
     }
 
-    public Dictionary() {
+    public LCSDictionary() {
         super();
     }
 
@@ -62,7 +62,7 @@ public class Dictionary {
      *
      * @param source 数据源
      */
-    public Dictionary(IDictionaryDataSource source) {
+    public LCSDictionary(IDictionaryDataSource source) {
         super();
         while (source.hasNext()) {
             WordData wordData = source.next();

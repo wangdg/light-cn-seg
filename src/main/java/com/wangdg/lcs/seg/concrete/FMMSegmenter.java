@@ -6,23 +6,23 @@ import java.util.List;
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
-import com.wangdg.lcs.trie.Dictionary;
+import com.wangdg.lcs.trie.LCSDictionary;
 
 /**
  * 正向最大配置分词
- * 
+ *
  * @author wangdg
  */
 public class FMMSegmenter extends BaseSegmenter {
 
-    public FMMSegmenter(Dictionary dict) {
+    public FMMSegmenter(LCSDictionary dict) {
         super(dict);
     }
-    
+
     public FMMSegmenter() {
         super();
     }
-    
+
     @Override
     public List<TermData> analyze(char[] array) {
 
@@ -53,7 +53,7 @@ public class FMMSegmenter extends BaseSegmenter {
                 pointer += 1;
                 continue;
             }
-            
+
             // 处理非中文Buffer
             this.handleNonCNBuffer(nonCNBuffer,
                     pointer - nonCNBuffer.length(), dataList);
@@ -81,11 +81,11 @@ public class FMMSegmenter extends BaseSegmenter {
                 pointer += 1;
             }
         }
-        
+
         // 处理非中文Buffer
         this.handleNonCNBuffer(nonCNBuffer,
                 pointer - nonCNBuffer.length(), dataList);
-        
+
         return dataList;
     }
 }

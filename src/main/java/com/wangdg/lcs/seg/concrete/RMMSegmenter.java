@@ -6,23 +6,23 @@ import java.util.List;
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
-import com.wangdg.lcs.trie.Dictionary;
+import com.wangdg.lcs.trie.LCSDictionary;
 
 /**
  * 逆向最大配置分词
- * 
+ *
  * @author wangdg
  */
 public class RMMSegmenter extends BaseSegmenter {
 
-    public RMMSegmenter(Dictionary dict) {
+    public RMMSegmenter(LCSDictionary dict) {
         super(dict);
     }
-    
+
     public RMMSegmenter() {
         super();
     }
-    
+
     @Override
     public List<TermData> analyze(char[] array) {
 
@@ -45,14 +45,14 @@ public class RMMSegmenter extends BaseSegmenter {
                 pointer -= 1;
                 continue;
             }
-            
+
             // 非中文字符处理
             if (!Utils.isCommonChinese(c)) {
                 nonCNBuffer.insert(0, c);
                 pointer -= 1;
                 continue;
             }
-            
+
             // 处理非中文Buffer
             this.handleNonCNBuffer(nonCNBuffer, pointer + 1, dataList);
 
@@ -67,7 +67,7 @@ public class RMMSegmenter extends BaseSegmenter {
                     break;
                 }
             }
-            
+
             if (data != null) {
                 pointer -= data.length();
             } else {
@@ -76,10 +76,10 @@ public class RMMSegmenter extends BaseSegmenter {
                 pointer -= 1;
             }
         }
-        
+
         // 处理非中文Buffer
         this.handleNonCNBuffer(nonCNBuffer, 0, dataList);
-        
+
         return dataList;
     }
 }

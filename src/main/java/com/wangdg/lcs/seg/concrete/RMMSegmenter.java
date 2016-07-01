@@ -6,6 +6,7 @@ import java.util.List;
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
+import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
 
 /**
@@ -58,11 +59,13 @@ public class RMMSegmenter extends BaseSegmenter {
 
             TermData data = null;
             for (int i = 0; i < charArray.length; i++) {
-                if (dictionary.contains(charArray, i, pointer - i + 1)) {
+                DictionaryQueryResult qr = dictionary.query(charArray, i, pointer - i + 1);
+                if (qr.isContain()) {
                     data = new TermData();
                     data.setTerm(new String(charArray, i, pointer - i + 1));
                     data.setStart(i);
                     data.setEnd(pointer);
+                    data.setUserData(qr.getUserData());
                     dataList.add(data);
                     break;
                 }
@@ -71,7 +74,11 @@ public class RMMSegmenter extends BaseSegmenter {
             if (data != null) {
                 pointer -= data.length();
             } else {
-                TermData charData = TermData.create(String.valueOf(c), pointer, pointer);
+                TermData charData = new TermData();
+                charData.setTerm(String.valueOf(c));
+                charData.setStart(pointer);
+                charData.setEnd(pointer);
+                charData.setUserData(null);
                 dataList.add(charData);
                 pointer -= 1;
             }

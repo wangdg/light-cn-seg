@@ -42,9 +42,11 @@ public abstract class BaseSegmenter implements ISegmenter {
      */
     protected void handleNonCNBuffer(StringBuffer buf, int start, List<TermData> dataList) {
         if (buf != null && buf.length() > 0) {
-            dataList.add(TermData.create(buf.toString(),
-                    start,
-                    start + buf.length() - 1));
+            TermData data = new TermData();
+            data.setTerm(buf.toString());
+            data.setStart(start);
+            data.setEnd(start + buf.length() - 1);
+            data.setUserData(null);
             buf.delete(0, buf.length());
         }
     }

@@ -39,7 +39,7 @@ public class ICCSegmenter extends BaseSegmenter {
                 pointer += 1;
                 continue;
             }
-            
+
             // 非中文字符处理
             if (!Utils.isCommonChinese(c)) {
                 nonCNBuffer.append(c);
@@ -51,16 +51,20 @@ public class ICCSegmenter extends BaseSegmenter {
             this.handleNonCNBuffer(nonCNBuffer,
                     pointer - nonCNBuffer.length(), dataList);
 
-            TermData data = TermData.create(String.valueOf(c), pointer, pointer);
+            TermData data = new TermData();
+            data.setTerm(String.valueOf(c));
+            data.setStart(pointer);
+            data.setEnd(pointer);
+            data.setUserData(null);
             dataList.add(data);
-            
+
             pointer += 1;
         }
-        
+
         // 处理非中文Buffer
         this.handleNonCNBuffer(nonCNBuffer,
                 pointer - nonCNBuffer.length(), dataList);
-        
+
         return dataList;
     }
 }

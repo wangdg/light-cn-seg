@@ -17,4 +17,8 @@ public class UserData {
     public String get(String key) {
         return map.get(key);
     }
+
+    public Map<String, String> map() {
+        return map;
+    }
 }

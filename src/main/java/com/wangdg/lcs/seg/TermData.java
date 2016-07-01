@@ -1,8 +1,10 @@
 package com.wangdg.lcs.seg;
 
+import com.wangdg.lcs.trie.UserData;
+
 /**
  * 分词单元信息
- * 
+ *
  * @author wangdg
  */
 public class TermData {
@@ -16,18 +18,9 @@ public class TermData {
     /** 结束位置 */
     private int end;
 
-    public static TermData create(String term, int start, int end) {
-        if (term != null) {
-            TermData data = new TermData();
-            data.setTerm(term);
-            data.setStart(start);
-            data.setEnd(end);
-            return data;
-        } else {
-            return null;
-        }
-    }
-    
+    /** 补充数据 */
+    private UserData userData;
+
     public int length() {
         if (term != null) {
             return term.length();
@@ -58,6 +51,14 @@ public class TermData {
 
     public void setEnd(int end) {
         this.end = end;
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 
     @Override

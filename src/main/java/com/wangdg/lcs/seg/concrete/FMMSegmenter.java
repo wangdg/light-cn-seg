@@ -6,6 +6,7 @@ import java.util.List;
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
+import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
 
 /**
@@ -61,11 +62,13 @@ public class FMMSegmenter extends BaseSegmenter {
             int length = charArray.length - pointer;
             TermData data = null;
             for (int l = length; l > 0; l--) {
-                if (dictionary.contains(charArray, pointer, l)) {
+                DictionaryQueryResult qr = dictionary.query(charArray, pointer, l);
+                if (qr.isContain()) {
                     data = new TermData();
                     data.setTerm(new String(charArray, pointer, l));
                     data.setStart(pointer);
                     data.setEnd(pointer + l - 1);
+                    data.setUserData(qr.getUserData());
                     dataList.add(data);
                     break;
                 }

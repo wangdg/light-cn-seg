@@ -2,7 +2,7 @@ package com.wangdg.lcs.trie;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wangdg.lcs.common.DataInitException;
+import com.wangdg.lcs.common.DictionaryInitException;
 import com.wangdg.lcs.common.Utils;
 
 import java.io.*;
@@ -28,7 +28,7 @@ public class LCSDictionary {
         try {
             file = new File(url.toURI());
         } catch (URISyntaxException e) {
-            throw new DataInitException("Dictionary Init Error!");
+            throw new DictionaryInitException("Dictionary Init Error!");
         }
         return new LCSDictionary(file);
     }
@@ -88,9 +88,9 @@ public class LCSDictionary {
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            throw new DataInitException("Dictionary Init Error!");
+            throw new DictionaryInitException("Dictionary Init Error!");
         } catch (IOException e) {
-            throw new DataInitException("Dictionary Init Error!");
+            throw new DictionaryInitException("Dictionary Init Error!");
         } finally {
             if (in != null) {
                 try {

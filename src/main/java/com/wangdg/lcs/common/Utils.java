@@ -1,14 +1,8 @@
 package com.wangdg.lcs.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.wangdg.lcs.trie.UserData;
-import com.wangdg.lcs.trie.WordData;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 工具类
@@ -174,46 +168,5 @@ public class Utils {
             retArray[i] = c;
         }
         return retArray;
-    }
-
-    /**
-     * 解析字符串到WordData
-     *
-     * @param str 字符串
-     * @return WordData
-     */
-    public static WordData convertToWordData(String str) {
-        if (str == null) {
-            return null;
-        }
-        String trimmed = str.trim();
-        if (trimmed.length() > 0) {
-            String[] array = str.split(":");
-
-            WordData word = new WordData();
-            word.setText(array[0]);
-
-            if (array.length > 1) {
-                String json = array[1].trim();
-                if (json.length() > 0) {
-                    try {
-                        JSONObject jsonObject = JSON.parseObject(json);
-                        Set<String> keys = jsonObject.keySet();
-                        if (!keys.isEmpty()) {
-                            UserData userData = new UserData();
-                            for (String key : keys) {
-                                userData.put(key, jsonObject.getString(key));
-                            }
-                            word.setUserData(userData);
-                        }
-                    } catch (Exception e) {
-                        // do nothing
-                    }
-                }
-            }
-            return word;
-        } else {
-            return null;
-        }
     }
 }

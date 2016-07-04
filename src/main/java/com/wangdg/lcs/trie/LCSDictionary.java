@@ -1,15 +1,16 @@
 package com.wangdg.lcs.trie;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.wangdg.lcs.common.DataInitException;
 import com.wangdg.lcs.common.Utils;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 词典类
@@ -22,18 +23,68 @@ public class LCSDictionary {
     private Map<Character, TrieNode> treeMap = new HashMap<Character, TrieNode>();
 
     public static LCSDictionary loadDefaultDictionary() {
-
-        LCSDictionary dict = new LCSDictionary();
-
-        InputStream in = LCSDictionary.class.getClassLoader().getResourceAsStream("main.dic");
+        URL url = LCSDictionary.class.getResource("/main.dic");
+        File file;
         try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            throw new DataInitException("Dictionary Init Error!");
+        }
+        return new LCSDictionary(file);
+    }
+
+    public LCSDictionary() {
+        super();
+    }
+
+    /**
+     * 通过文件构建词典
+     *
+     * @param file 词典文件
+     */
+    public LCSDictionary(File file) {
+        super();
+        this.initializeDictionary(file);
+    }
+
+    /**
+     * 用文件初始化词典
+     *
+     * @param file 文件
+     */
+    protected void initializeDictionary(File file) {
+
+        if (file == null || !file.isFile()) {
+            return;
+        }
+
+        InputStream in = null;
+        try {
+            in = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(in , "UTF-8"), 512);
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 String trimmed = line.trim();
-                if (!trimmed.startsWith("#")) {
-                    WordData wordData = Utils.convertToWordData(trimmed);
-                    dict.addWord(wordData.getText(), wordData.getUserData());
+                if (!Utils.isBlank(trimmed) && !trimmed.startsWith("#")) {
+                    String[] array = trimmed.split(":");
+                    String word = array[0];
+                    UserData userData = null;
+                    if (array.length > 1) {
+                        String json = array[1];
+                        try {
+                            JSONObject jsonObject = JSON.parseObject(json);
+                            Set<String> keys = jsonObject.keySet();
+                            if (!keys.isEmpty()) {
+                                userData = new UserData();
+                                for (String key : keys) {
+                                    userData.put(key, jsonObject.get(key));
+                                }
+                            }
+                        } catch (Exception e) {
+                            // do nothing
+                        }
+                    }
+                    this.addWord(word, userData);
                 }
             }
         } catch (UnsupportedEncodingException e) {
@@ -48,25 +99,6 @@ public class LCSDictionary {
                     // do nothing
                 }
             }
-        }
-
-        return dict;
-    }
-
-    public LCSDictionary() {
-        super();
-    }
-
-    /**
-     * 通过文件构建词典
-     *
-     * @param source 数据源
-     */
-    public LCSDictionary(IDictionaryDataSource source) {
-        super();
-        while (source.hasNext()) {
-            WordData wordData = source.next();
-            this.addWord(wordData.getText(), wordData.getUserData());
         }
     }
 

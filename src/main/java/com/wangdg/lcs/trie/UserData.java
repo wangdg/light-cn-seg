@@ -8,17 +8,21 @@ import java.util.Map;
  */
 public class UserData {
 
-    private Map<String, String> map = new HashMap<String, String>();
+    private Map<String, Object> map = new HashMap<String, Object>();
 
-    public void put(String key, String val) {
+    public void put(String key, Object val) {
         map.put(key, val);
     }
 
-    public String get(String key) {
+    public Object get(String key) {
         return map.get(key);
     }
 
-    public Map<String, String> map() {
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
+
+    public Map<String, Object> map() {
         return map;
     }
 }

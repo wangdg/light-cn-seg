@@ -47,6 +47,7 @@ public abstract class BaseSegmenter implements ISegmenter {
             data.setStart(start);
             data.setEnd(start + buf.length() - 1);
             data.setUserData(null);
+            dataList.add(data);
             buf.delete(0, buf.length());
         }
     }

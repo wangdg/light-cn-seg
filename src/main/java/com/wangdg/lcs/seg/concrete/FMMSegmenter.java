@@ -70,6 +70,7 @@ public class FMMSegmenter extends BaseSegmenter {
                     data.setEnd(pointer + l - 1);
                     data.setUserData(qr.getUserData());
                     dataList.add(data);
+                    this.handleExtraSegments(data, dataList);
                     break;
                 }
             }

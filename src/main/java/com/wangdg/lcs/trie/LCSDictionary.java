@@ -1,7 +1,9 @@
 package com.wangdg.lcs.trie;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.wangdg.lcs.common.Constants;
 import com.wangdg.lcs.common.DictionaryInitException;
 import com.wangdg.lcs.common.Utils;
 
@@ -9,6 +11,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,28 +67,19 @@ public class LCSDictionary {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in , "UTF-8"), 512);
             String line;
             while ((line = reader.readLine()) != null) {
+
                 String trimmed = line.trim();
-                if (!Utils.isBlank(trimmed) && !trimmed.startsWith("#")) {
-                    String[] array = trimmed.split(":");
-                    String word = array[0];
-                    UserData userData = null;
-                    if (array.length > 1) {
-                        String json = array[1];
-                        try {
-                            JSONObject jsonObject = JSON.parseObject(json);
-                            Set<String> keys = jsonObject.keySet();
-                            if (!keys.isEmpty()) {
-                                userData = new UserData();
-                                for (String key : keys) {
-                                    userData.put(key, jsonObject.get(key));
-                                }
-                            }
-                        } catch (Exception e) {
-                            // do nothing
-                        }
-                    }
-                    this.addWord(word, userData);
+                if (Utils.isBlank(trimmed) || trimmed.startsWith("#")) {
+                    continue;
                 }
+
+                String[] array = trimmed.split("-");
+                String word = array[0];
+                UserData userData = null;
+                if (array.length > 1) {
+                    userData = this.parseUserData(array[1]);
+                }
+                this.addWord(word, userData);
             }
         } catch (UnsupportedEncodingException e) {
             throw new DictionaryInitException("Dictionary Init Error!");
@@ -99,6 +93,46 @@ public class LCSDictionary {
                     // do nothing
                 }
             }
+        }
+    }
+
+    /**
+     * 解析UserData
+     *
+     * @param json UserData Json
+     * @return UserData对象
+     */
+    protected UserData parseUserData(String json) {
+        if (json != null) {
+            try {
+                UserData userData = new UserData();
+                JSONObject jsonObject = JSON.parseObject(json);
+                Set<String> keys = jsonObject.keySet();
+                if (!keys.isEmpty()) {
+                    for (String key : keys) {
+                        // 附加分词
+                        if (Constants.USERDATA_KEY_EXTRA.equals(key)) {
+                            Set<String> extras = new HashSet<String>();
+                            JSONArray array = jsonObject.getJSONArray(Constants.USERDATA_KEY_EXTRA);
+                            if (array != null) {
+                                for (int i = 0; i < array.size(); i++) {
+                                    extras.add((String) array.get(i));
+                                }
+                            }
+                            userData.put(key, extras);
+                        }
+                    }
+                }
+                if (!userData.isEmpty()) {
+                    return userData;
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 
@@ -136,11 +170,10 @@ public class LCSDictionary {
                 if (subNode == null) {
                     subNode = new TrieNode(charArray[i], isWord);
                     node.addNode(subNode);
-                } else {
-                    if (isWord) {
-                        subNode.setIsWord(isWord);
-                        subNode.setUserData(userData);
-                    }
+                }
+                if (isWord) {
+                    subNode.setIsWord(isWord);
+                    subNode.setUserData(userData);
                 }
                 node = subNode;
             }

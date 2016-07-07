@@ -1,8 +1,11 @@
 package com.wangdg.lcs.seg;
 
 import java.util.List;
+import java.util.Set;
 
+import com.wangdg.lcs.common.Constants;
 import com.wangdg.lcs.trie.LCSDictionary;
+import com.wangdg.lcs.trie.UserData;
 
 /**
  * 分词器基类
@@ -14,14 +17,19 @@ public abstract class BaseSegmenter implements ISegmenter {
     /** 分词词典 */
     protected LCSDictionary dictionary;
 
+    /** 是否输出附加分词 */
+    private boolean outputExtraSegments;
+
     public BaseSegmenter(LCSDictionary dict) {
         super();
         dictionary = dict;
+        outputExtraSegments = false;
     }
 
     public BaseSegmenter() {
         super();
         dictionary = LCSDictionary.loadDefaultDictionary();
+        outputExtraSegments = false;
     }
 
     @Override
@@ -50,5 +58,45 @@ public abstract class BaseSegmenter implements ISegmenter {
             dataList.add(data);
             buf.delete(0, buf.length());
         }
+    }
+
+    /**
+     * 处理附加分词
+     *
+     * @param data 分词结果
+     * @param dataList 导入数据列表
+     */
+    protected void handleExtraSegments(TermData data, List<TermData> dataList) {
+        if (data == null || dataList == null || !isOutputExtraSegments()) {
+            return;
+        }
+        UserData userData = data.getUserData();
+        if (userData != null && !userData.isEmpty()) {
+            Set<String> extras = (Set<String>) userData.get(Constants.USERDATA_KEY_EXTRA);
+            if (extras == null || extras.isEmpty()) {
+                return;
+            }
+            String term = data.getTerm();
+            for (String extra : extras) {
+                int index = term.indexOf(extra);
+                if (index < 0) {
+                    continue;
+                }
+                TermData termData = new TermData();
+                termData.setTerm(extra);
+                termData.setStart(data.getStart() + index);
+                termData.setEnd(termData.getStart() + extra.length() - 1);
+                termData.setUserData(null);
+                dataList.add(termData);
+            }
+        }
+    }
+
+    public boolean isOutputExtraSegments() {
+        return outputExtraSegments;
+    }
+
+    public void setOutputExtraSegments(boolean outputExtraSegments) {
+        this.outputExtraSegments = outputExtraSegments;
     }
 }

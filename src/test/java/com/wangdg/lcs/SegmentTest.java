@@ -1,7 +1,11 @@
 package com.wangdg.lcs;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
+import com.wangdg.lcs.common.DictionaryInitException;
 import com.wangdg.lcs.seg.ISegmenter;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.seg.concrete.FMMSegmenter;
@@ -38,7 +42,22 @@ public class SegmentTest extends TestCase {
     }
 
     public void test03() {
-        List<TermData> segs = icc.analyze(TEST_TEXT_01);
+        List<TermData> segs = fmm.analyze("男装");
+        System.out.println(segs);
+    }
+
+    public void test04() {
+        URL url = LCSDictionary.class.getResource("/test1.dic");
+        File file;
+        try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            throw new DictionaryInitException("Dictionary Init Error!");
+        }
+        LCSDictionary dict = new LCSDictionary(file);
+        FMMSegmenter segmenter = new FMMSegmenter(dict);
+        segmenter.setOutputExtraSegments(true);
+        List<TermData> segs = segmenter.analyze("男装和手机膜");
         System.out.println(segs);
     }
 }

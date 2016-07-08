@@ -72,7 +72,7 @@ public abstract class BaseSegmenter implements ISegmenter {
         }
         UserData userData = data.getUserData();
         if (userData != null && !userData.isEmpty()) {
-            Set<String> extras = (Set<String>) userData.get(Constants.USERDATA_KEY_EXTRA);
+            Set<String> extras = (Set<String>) userData.get(Constants.USER_DATA_KEY_EXTRA);
             if (extras == null || extras.isEmpty()) {
                 return;
             }

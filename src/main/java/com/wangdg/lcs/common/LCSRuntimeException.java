@@ -1,15 +1,15 @@
 package com.wangdg.lcs.common;
 
 /**
- * 数据初始化异常
+ * LCS分词系统异常
  *
  * @author wangdg
  */
-public class DictionaryInitException extends RuntimeException {
+public class LCSRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public DictionaryInitException(String msg) {
+    public LCSRuntimeException(String msg) {
         super(msg);
     }
 }

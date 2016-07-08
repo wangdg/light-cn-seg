@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
-import com.wangdg.lcs.common.DictionaryInitException;
+import com.wangdg.lcs.common.LCSRuntimeException;
 import com.wangdg.lcs.seg.ISegmenter;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.seg.concrete.FMMSegmenter;
@@ -52,7 +52,7 @@ public class SegmentTest extends TestCase {
         try {
             file = new File(url.toURI());
         } catch (URISyntaxException e) {
-            throw new DictionaryInitException("Dictionary Init Error!");
+            throw new LCSRuntimeException("Dictionary Init Error!");
         }
         LCSDictionary dict = new LCSDictionary(file);
         FMMSegmenter segmenter = new FMMSegmenter(dict);

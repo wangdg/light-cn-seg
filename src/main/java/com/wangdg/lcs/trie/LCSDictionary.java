@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wangdg.lcs.common.Constants;
-import com.wangdg.lcs.common.DictionaryInitException;
+import com.wangdg.lcs.common.LCSRuntimeException;
 import com.wangdg.lcs.common.Utils;
 
 import java.io.*;
@@ -31,7 +31,7 @@ public class LCSDictionary {
         try {
             file = new File(url.toURI());
         } catch (URISyntaxException e) {
-            throw new DictionaryInitException("Dictionary Init Error!");
+            throw new LCSRuntimeException("Dictionary Init Error!");
         }
         return new LCSDictionary(file);
     }
@@ -47,44 +47,14 @@ public class LCSDictionary {
      */
     public LCSDictionary(File file) {
         super();
-        this.initializeDictionary(file);
-    }
-
-    /**
-     * 用文件初始化词典
-     *
-     * @param file 文件
-     */
-    protected void initializeDictionary(File file) {
-
-        if (file == null || !file.isFile()) {
-            return;
-        }
-
         InputStream in = null;
         try {
             in = new FileInputStream(file);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in , "UTF-8"), 512);
-            String line;
-            while ((line = reader.readLine()) != null) {
-
-                String trimmed = line.trim();
-                if (Utils.isBlank(trimmed) || trimmed.startsWith("#")) {
-                    continue;
-                }
-
-                String[] array = trimmed.split("-");
-                String word = array[0];
-                UserData userData = null;
-                if (array.length > 1) {
-                    userData = this.parseUserData(array[1]);
-                }
-                this.addWord(word, userData);
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new DictionaryInitException("Dictionary Init Error!");
+            this.initializeDictionary(in);
+        } catch (FileNotFoundException e) {
+            throw new LCSRuntimeException("Dictionary Init Exception.");
         } catch (IOException e) {
-            throw new DictionaryInitException("Dictionary Init Error!");
+            throw new LCSRuntimeException("Dictionary Init Exception.");
         } finally {
             if (in != null) {
                 try {
@@ -93,6 +63,47 @@ public class LCSDictionary {
                     // do nothing
                 }
             }
+        }
+    }
+
+    /**
+     * 通过输入流构建词典
+     *
+     * @param in 输入流
+     * @throws IOException
+     */
+    public LCSDictionary(InputStream in) throws IOException {
+        super();
+        this.initializeDictionary(in);
+    }
+
+    /**
+     * 用文件初始化词典
+     *
+     * @param in 输入流
+     */
+    protected void initializeDictionary(InputStream in) throws IOException {
+
+        if (in == null) {
+            return;
+        }
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in , "UTF-8"), 512);
+        String line;
+        while ((line = reader.readLine()) != null) {
+
+            String trimmed = line.trim();
+            if (Utils.isBlank(trimmed) || trimmed.startsWith("#")) {
+                continue;
+            }
+
+            String[] array = trimmed.split("-");
+            String word = array[0];
+            UserData userData = null;
+            if (array.length > 1) {
+                userData = this.parseUserData(array[1]);
+            }
+            this.addWord(word, userData);
         }
     }
 
@@ -111,9 +122,9 @@ public class LCSDictionary {
                 if (!keys.isEmpty()) {
                     for (String key : keys) {
                         // 附加分词
-                        if (Constants.USERDATA_KEY_EXTRA.equals(key)) {
+                        if (Constants.USER_DATA_KEY_EXTRA.equals(key)) {
                             Set<String> extras = new HashSet<String>();
-                            JSONArray array = jsonObject.getJSONArray(Constants.USERDATA_KEY_EXTRA);
+                            JSONArray array = jsonObject.getJSONArray(Constants.USER_DATA_KEY_EXTRA);
                             if (array != null) {
                                 for (int i = 0; i < array.size(); i++) {
                                     extras.add((String) array.get(i));

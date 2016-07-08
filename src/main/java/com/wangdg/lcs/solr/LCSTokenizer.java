@@ -14,7 +14,7 @@ import com.wangdg.lcs.seg.TermData;
 
 /**
  * LCS分词器 Lucene Tokenizer适配器类
- * 
+ *
  * @author wangdg
  */
 public class LCSTokenizer extends Tokenizer {
@@ -33,6 +33,9 @@ public class LCSTokenizer extends Tokenizer {
 
     /** 分语器 */
     private ISegmenter segmenter;
+
+    /** 输出 */
+    private boolean outputExtraSegments;
 
     public LCSTokenizer(Reader input, ISegmenter seg) {
         super(input);
@@ -64,7 +67,7 @@ public class LCSTokenizer extends Tokenizer {
 
     /**
      * 使用LCS分词
-     * 
+     *
      * @param reader
      *            文本Reader
      * @param seg

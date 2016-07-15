@@ -50,11 +50,12 @@ public abstract class BaseSegmenter implements ISegmenter {
      */
     protected void handleNonCNBuffer(StringBuffer buf, int start, List<TermData> dataList) {
         if (buf != null && buf.length() > 0) {
+            String term = buf.toString();
             TermData data = new TermData();
-            data.setTerm(buf.toString());
+            data.setTerm(term);
             data.setStart(start);
             data.setEnd(start + buf.length() - 1);
-            data.setUserData(null);
+            data.setUserData(dictionary.getUserData(term));
             dataList.add(data);
             buf.delete(0, buf.length());
         }

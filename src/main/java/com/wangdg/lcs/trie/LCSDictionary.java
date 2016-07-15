@@ -1,8 +1,5 @@
 package com.wangdg.lcs.trie;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.wangdg.lcs.common.Constants;
 import com.wangdg.lcs.common.LCSRuntimeException;
 import com.wangdg.lcs.common.Utils;
@@ -97,7 +94,7 @@ public class LCSDictionary {
                 continue;
             }
 
-            String[] array = trimmed.split("-");
+            String[] array = trimmed.split(":");
             String word = array[0];
             UserData userData = null;
             if (array.length > 1) {
@@ -110,38 +107,21 @@ public class LCSDictionary {
     /**
      * 解析UserData
      *
-     * @param json UserData Json
+     * @param str 附加分词字符串
      * @return UserData对象
      */
-    protected UserData parseUserData(String json) {
-        if (json != null) {
-            try {
-                UserData userData = new UserData();
-                JSONObject jsonObject = JSON.parseObject(json);
-                Set<String> keys = jsonObject.keySet();
-                if (!keys.isEmpty()) {
-                    for (String key : keys) {
-                        // 附加分词
-                        if (Constants.USER_DATA_KEY_EXTRA.equals(key)) {
-                            Set<String> extras = new HashSet<String>();
-                            JSONArray array = jsonObject.getJSONArray(Constants.USER_DATA_KEY_EXTRA);
-                            if (array != null) {
-                                for (int i = 0; i < array.size(); i++) {
-                                    extras.add((String) array.get(i));
-                                }
-                            }
-                            userData.put(key, extras);
-                        }
-                    }
+    protected UserData parseUserData(String str) {
+        if (str != null) {
+            String[] tokens = str.split(",");
+            UserData userData = new UserData();
+            if (tokens != null && tokens.length > 0) {
+                Set<String> extras = new HashSet<String>();
+                for (String token : tokens) {
+                    extras.add(token);
                 }
-                if (!userData.isEmpty()) {
-                    return userData;
-                } else {
-                    return null;
-                }
-            } catch (Exception e) {
-                return null;
+                userData.put(Constants.USER_DATA_KEY_EXTRA, extras);
             }
+            return userData;
         } else {
             return null;
         }

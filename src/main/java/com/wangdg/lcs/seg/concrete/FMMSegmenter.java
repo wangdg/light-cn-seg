@@ -81,6 +81,7 @@ public class FMMSegmenter extends BaseSegmenter {
                 charData.setTerm(String.valueOf(c));
                 charData.setStart(pointer);
                 charData.setEnd(pointer);
+                charData.setUserData(dictionary.getUserData(charData.getTerm()));
                 dataList.add(charData);
                 pointer += 1;
             }

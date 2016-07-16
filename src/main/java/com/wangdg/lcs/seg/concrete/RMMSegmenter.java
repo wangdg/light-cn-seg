@@ -79,7 +79,7 @@ public class RMMSegmenter extends BaseSegmenter {
                 charData.setTerm(String.valueOf(c));
                 charData.setStart(pointer);
                 charData.setEnd(pointer);
-                charData.setUserData(null);
+                charData.setUserData(dictionary.getUserData(charData.getTerm()));
                 dataList.add(charData);
                 pointer -= 1;
             }

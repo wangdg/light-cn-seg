@@ -12,6 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <lucene.version>4.8.1</lucene.version>
     </properties>
 
     <distributionManagement>
@@ -37,12 +38,14 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
-            <version>4.8.1</version>
+            <version>${lucene.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
-            <version>4.8.1</version>
+            <version>${lucene.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

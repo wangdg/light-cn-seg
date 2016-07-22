@@ -8,6 +8,7 @@ import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
+import com.wangdg.lcs.trie.TermType;
 
 /**
  * 正向最大配置分词
@@ -69,6 +70,7 @@ public class FMMSegmenter extends BaseSegmenter {
                     data.setStart(pointer);
                     data.setEnd(pointer + l - 1);
                     data.setUserData(qr.getUserData());
+                    data.setType(TermType.WORD);
                     dataList.add(data);
                     this.handleExtraSegments(data, dataList);
                     break;
@@ -81,7 +83,7 @@ public class FMMSegmenter extends BaseSegmenter {
                 charData.setTerm(String.valueOf(c));
                 charData.setStart(pointer);
                 charData.setEnd(pointer);
-                charData.setUserData(dictionary.getUserData(charData.getTerm()));
+                this.fillTermUserDataAndType(charData, dictionary, TermType.CHAR);
                 dataList.add(charData);
                 pointer += 1;
             }

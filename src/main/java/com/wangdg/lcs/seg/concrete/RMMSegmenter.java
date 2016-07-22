@@ -8,6 +8,7 @@ import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
+import com.wangdg.lcs.trie.TermType;
 
 /**
  * 逆向最大配置分词
@@ -66,6 +67,7 @@ public class RMMSegmenter extends BaseSegmenter {
                     data.setStart(i);
                     data.setEnd(pointer);
                     data.setUserData(qr.getUserData());
+                    data.setType(TermType.WORD);
                     dataList.add(data);
                     this.handleExtraSegments(data, dataList);
                     break;
@@ -79,7 +81,7 @@ public class RMMSegmenter extends BaseSegmenter {
                 charData.setTerm(String.valueOf(c));
                 charData.setStart(pointer);
                 charData.setEnd(pointer);
-                charData.setUserData(dictionary.getUserData(charData.getTerm()));
+                this.fillTermUserDataAndType(charData, dictionary, TermType.CHAR);
                 dataList.add(charData);
                 pointer -= 1;
             }

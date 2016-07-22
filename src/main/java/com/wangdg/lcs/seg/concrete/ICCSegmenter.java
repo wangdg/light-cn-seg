@@ -6,6 +6,8 @@ import java.util.List;
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
+import com.wangdg.lcs.trie.DictionaryQueryResult;
+import com.wangdg.lcs.trie.TermType;
 
 /**
  * 中文单词分词算法
@@ -55,7 +57,7 @@ public class ICCSegmenter extends BaseSegmenter {
             data.setTerm(String.valueOf(c));
             data.setStart(pointer);
             data.setEnd(pointer);
-            data.setUserData(null);
+            this.fillTermUserDataAndType(data, dictionary, TermType.CHAR);
             dataList.add(data);
 
             pointer += 1;

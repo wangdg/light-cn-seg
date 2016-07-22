@@ -1,5 +1,6 @@
 package com.wangdg.lcs.seg;
 
+import com.wangdg.lcs.trie.TermType;
 import com.wangdg.lcs.trie.UserData;
 
 /**
@@ -20,6 +21,9 @@ public class TermData {
 
     /** 补充数据 */
     private UserData userData;
+
+    /** 分词类型 */
+    private TermType type;
 
     public int length() {
         if (term != null) {
@@ -61,8 +65,16 @@ public class TermData {
         this.userData = userData;
     }
 
+    public TermType getType() {
+        return type;
+    }
+
+    public void setType(TermType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s(%d, %d)", term, start, end);
+        return String.format("%s(%d, %d, %s)", term, start, end, type);
     }
 }

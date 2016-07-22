@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.wangdg.lcs.common.Constants;
+import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
+import com.wangdg.lcs.trie.TermType;
 import com.wangdg.lcs.trie.UserData;
 
 /**
@@ -55,7 +57,7 @@ public abstract class BaseSegmenter implements ISegmenter {
             data.setTerm(term);
             data.setStart(start);
             data.setEnd(start + buf.length() - 1);
-            data.setUserData(dictionary.getUserData(term));
+            this.fillTermUserDataAndType(data, dictionary, TermType.SYMBOL);
             dataList.add(data);
             buf.delete(0, buf.length());
         }
@@ -88,7 +90,32 @@ public abstract class BaseSegmenter implements ISegmenter {
                 termData.setStart(data.getStart() + index);
                 termData.setEnd(termData.getStart() + extra.length() - 1);
                 termData.setUserData(null);
+                termData.setType(TermType.EXTRA);
                 dataList.add(termData);
+            }
+        }
+    }
+
+    /**
+     * 添充分词Data中的userData和type
+     *
+     * @param data 分词数据
+     * @param dict 词典
+     * @param defType 词典中不存在使用哪种type
+     */
+    protected void fillTermUserDataAndType(TermData data, LCSDictionary dict, TermType defType) {
+        if (data == null || dict == null) {
+            return;
+        }
+        String term = data.getTerm();
+        if (term != null) {
+            DictionaryQueryResult qr = dict.query(term);
+            if (qr != null && qr.isContain()) {
+                data.setUserData(qr.getUserData());
+                data.setType(TermType.WORD);
+            } else {
+                data.setUserData(null);
+                data.setType(defType);
             }
         }
     }

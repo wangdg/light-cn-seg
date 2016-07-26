@@ -11,6 +11,7 @@ import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 
 import com.wangdg.lcs.seg.ISegmenter;
 import com.wangdg.lcs.seg.TermData;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 /**
  * LCS分词器 Lucene Tokenizer适配器类
@@ -24,6 +25,9 @@ public class LCSTokenizer extends Tokenizer {
 
     /** 词元位移属性 */
     private final OffsetAttribute offsetAttr;
+
+    /** 词类型 */
+    private final TypeAttribute typeAttr;
 
     /** 分析结果列表 */
     private List<TermData> termDataList;
@@ -42,6 +46,7 @@ public class LCSTokenizer extends Tokenizer {
         segmenter = seg;
         termAttr = this.addAttribute(CharTermAttribute.class);
         offsetAttr = this.addAttribute(OffsetAttribute.class);
+        typeAttr = this.addAttribute(TypeAttribute.class);
         pointer = 0;
     }
 
@@ -58,6 +63,7 @@ public class LCSTokenizer extends Tokenizer {
             termAttr.append(term.getTerm());
             termAttr.setLength(term.getTerm().length());
             offsetAttr.setOffset(term.getStart(), term.getEnd());
+            typeAttr.setType(term.getType().toString());
             pointer += 1;
             return true;
         } else {

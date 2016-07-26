@@ -69,7 +69,9 @@ public class RMMSegmenter extends BaseSegmenter {
                     data.setUserData(qr.getUserData());
                     data.setType(TermType.WORD);
                     dataList.add(data);
-                    this.handleExtraSegments(data, dataList);
+                    if (this.isOutputExtraSegments()) {
+                        this.handleExtraSegments(data, dataList);
+                    }
                     break;
                 }
             }

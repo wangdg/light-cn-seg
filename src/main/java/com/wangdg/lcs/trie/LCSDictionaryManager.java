@@ -37,8 +37,7 @@ public class LCSDictionaryManager {
     }
 
     protected LCSDictionary createDictionary(File file) {
-        File loadFile = file;
-        if (loadFile == null) {
+        if (file == null) {
             InputStream in = getClass().getResourceAsStream("/main.dic");
             try {
                 return new LCSDictionary(in);
@@ -54,10 +53,8 @@ public class LCSDictionaryManager {
                 }
             }
         }
-        return new LCSDictionary(loadFile);
+        return new LCSDictionary(file);
     }
-
-
 
     public void putDictionary(Object key, LCSDictionary dict) {
         dictMap.put(key, dict);

@@ -52,7 +52,11 @@ public class LCSAnalyzerFactory extends TokenizerFactory {
             } catch (URISyntaxException e) {
                 throw new LCSRuntimeException("Dictionary Init Error!");
             }
+            if (file == null || !file.isFile()) {
+                throw new LCSRuntimeException(String.format("指定的词典文件[%s]不存在", dict));
+            }
         }
+
         LCSDictionary dict = LCSDictionaryManager.getInstance().loadDictionary(file);
 
         // FMM

@@ -59,9 +59,7 @@ public abstract class BaseSegmenter implements ISegmenter {
             data.setEnd(start + buf.length() - 1);
             this.fillTermUserDataAndType(data, dictionary, TermType.SYMBOL);
             dataList.add(data);
-            if (this.isOutputExtraSegments()) {
-                this.handleExtraSegments(data, dataList);
-            }
+            this.handleExtraSegments(data, dataList);
             buf.delete(0, buf.length());
         }
     }

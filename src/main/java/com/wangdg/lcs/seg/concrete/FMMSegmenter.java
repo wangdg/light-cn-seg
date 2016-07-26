@@ -72,9 +72,7 @@ public class FMMSegmenter extends BaseSegmenter {
                     data.setUserData(qr.getUserData());
                     data.setType(TermType.WORD);
                     dataList.add(data);
-                    if (this.isOutputExtraSegments()) {
-                        this.handleExtraSegments(data, dataList);
-                    }
+                    this.handleExtraSegments(data, dataList);
                     break;
                 }
             }

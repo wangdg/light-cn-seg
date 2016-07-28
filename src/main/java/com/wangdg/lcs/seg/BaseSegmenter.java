@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.wangdg.lcs.common.Constants;
+import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
 import com.wangdg.lcs.trie.TermType;
@@ -19,19 +20,19 @@ public abstract class BaseSegmenter implements ISegmenter {
     /** 分词词典 */
     protected LCSDictionary dictionary;
 
-    /** 是否输出附加分词 */
-    private boolean outputExtraSegments;
+    /** 细力度分词 */
+    protected boolean smart;
 
     public BaseSegmenter(LCSDictionary dict) {
         super();
         dictionary = dict;
-        outputExtraSegments = false;
+        smart = false;
     }
 
     public BaseSegmenter() {
         super();
         dictionary = LCSDictionary.loadDefaultDictionary();
-        outputExtraSegments = false;
+        smart = false;
     }
 
     @Override
@@ -60,6 +61,7 @@ public abstract class BaseSegmenter implements ISegmenter {
             this.fillTermUserDataAndType(data, dictionary, TermType.SYMBOL);
             dataList.add(data);
             this.handleExtraSegments(data, dataList);
+            this.handleSymbolSegments(data, dataList);
             buf.delete(0, buf.length());
         }
     }
@@ -71,7 +73,7 @@ public abstract class BaseSegmenter implements ISegmenter {
      * @param dataList 导入数据列表
      */
     protected void handleExtraSegments(TermData data, List<TermData> dataList) {
-        if (data == null || dataList == null || !isOutputExtraSegments()) {
+        if (data == null || dataList == null || !isSmart()) {
             return;
         }
         UserData userData = data.getUserData();
@@ -93,6 +95,57 @@ public abstract class BaseSegmenter implements ISegmenter {
                 termData.setUserData(null);
                 termData.setType(TermType.EXTRA);
                 dataList.add(termData);
+            }
+        }
+    }
+
+    /**
+     * 处理SYMBOL类型分词
+     *
+     * @param data 分词结果
+     * @param dataList 导入数据列表
+     */
+    protected void handleSymbolSegments(TermData data, List<TermData> dataList) {
+
+        if (data == null || data.getType() != TermType.SYMBOL || !isSmart()) {
+            return;
+        }
+
+        char[] array = data.getTerm().toCharArray();
+        int pt = 0;
+        int length = array.length;
+
+        while (pt < length) {
+
+            int l = length - pt;
+
+            TermData t = null;
+            for (int i = 1; i <= l; i++) {
+                DictionaryQueryResult qr = dictionary.query(array, pt, i);
+                if (qr != null && qr.isContain()) {
+                    t = new TermData();
+                    t.setTerm(new String(array, pt, i));
+                    t.setType(TermType.WORD);
+                    t.setUserData(qr.getUserData());
+                    t.setStart(data.getStart() + pt);
+                    t.setEnd(t.getStart() + pt + i - 1);
+                    dataList.add(t);
+                    pt = pt + i;
+                    break;
+                }
+            }
+            if (t == null) {
+                // 剩下的文本不是原词
+                if (pt > 0) {
+                    t = new TermData();
+                    t.setTerm(new String(array, pt, length - pt));
+                    t.setType(TermType.SYMBOL);
+                    t.setUserData(null);
+                    t.setStart(data.getStart() + pt);
+                    t.setEnd(t.getStart() + length - pt - 1);
+                    dataList.add(t);
+                }
+                break;
             }
         }
     }
@@ -121,11 +174,11 @@ public abstract class BaseSegmenter implements ISegmenter {
         }
     }
 
-    public boolean isOutputExtraSegments() {
-        return outputExtraSegments;
+    public boolean isSmart() {
+        return smart;
     }
 
-    public void setOutputExtraSegments(boolean outputExtraSegments) {
-        this.outputExtraSegments = outputExtraSegments;
+    public void setSmart(boolean smart) {
+        this.smart = smart;
     }
 }

@@ -24,7 +24,7 @@ import java.util.Map;
 public class LCSAnalyzerFactory extends TokenizerFactory {
 
     /** 是否输出附加分词 */
-    private boolean extra = false;
+    private boolean smart = false;
 
     /** 算法 */
     private String alg;
@@ -39,7 +39,7 @@ public class LCSAnalyzerFactory extends TokenizerFactory {
 
         super(args);
         assureMatchVersion();
-        this.setExtra("true".equals(args.get("extra")));
+        this.setSmart("true".equals(args.get("smart")));
         this.setAlg(args.get("alg"));
         this.setDict(args.get("dict"));
 
@@ -61,12 +61,12 @@ public class LCSAnalyzerFactory extends TokenizerFactory {
 
         // FMM
         FMMSegmenter fmm = new FMMSegmenter(dict);
-        fmm.setOutputExtraSegments(extra);
+        fmm.setSmart(smart);
         segmenterMap.put("fmm", fmm);
 
         // RMM
         RMMSegmenter rmm = new RMMSegmenter(dict);
-        rmm.setOutputExtraSegments(extra);
+        rmm.setSmart(smart);
         segmenterMap.put("rmm", rmm);
 
         // ICC
@@ -81,8 +81,8 @@ public class LCSAnalyzerFactory extends TokenizerFactory {
         return _IKTokenizer;
     }
 
-    protected void setExtra(boolean extra) {
-        this.extra = extra;
+    public void setSmart(boolean smart) {
+        this.smart = smart;
     }
 
     protected void setAlg(String alg) {

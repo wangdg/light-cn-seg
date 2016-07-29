@@ -125,7 +125,7 @@ public abstract class BaseSegmenter implements ISegmenter {
                 if (qr != null && qr.isContain()) {
                     t = new TermData();
                     t.setTerm(new String(array, pt, i));
-                    t.setType(TermType.WORD);
+                    t.setType(TermType.SYMBOL_WORD);
                     t.setUserData(qr.getUserData());
                     t.setStart(data.getStart() + pt);
                     t.setEnd(t.getStart() + pt + i - 1);
@@ -139,7 +139,7 @@ public abstract class BaseSegmenter implements ISegmenter {
                 if (pt > 0) {
                     t = new TermData();
                     t.setTerm(new String(array, pt, length - pt));
-                    t.setType(TermType.SYMBOL);
+                    t.setType(TermType.SYMBOL_PART);
                     t.setUserData(null);
                     t.setStart(data.getStart() + pt);
                     t.setEnd(t.getStart() + length - pt - 1);

@@ -1,14 +1,10 @@
 package com.wangdg.lcs.seg;
 
-import java.util.List;
-import java.util.Set;
-
-import com.wangdg.lcs.common.Constants;
-import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
 import com.wangdg.lcs.trie.TermType;
-import com.wangdg.lcs.trie.UserData;
+
+import java.util.List;
 
 /**
  * 分词器基类
@@ -60,42 +56,8 @@ public abstract class BaseSegmenter implements ISegmenter {
             data.setEnd(start + buf.length() - 1);
             this.fillTermUserDataAndType(data, dictionary, TermType.SYMBOL);
             dataList.add(data);
-            this.handleExtraSegments(data, dataList);
             this.handleSymbolSegments(data, dataList);
             buf.delete(0, buf.length());
-        }
-    }
-
-    /**
-     * 处理附加分词
-     *
-     * @param data 分词结果
-     * @param dataList 导入数据列表
-     */
-    protected void handleExtraSegments(TermData data, List<TermData> dataList) {
-        if (data == null || dataList == null || !isSmart()) {
-            return;
-        }
-        UserData userData = data.getUserData();
-        if (userData != null && !userData.isEmpty()) {
-            Set<String> extras = (Set<String>) userData.get(Constants.USER_DATA_KEY_EXTRA);
-            if (extras == null || extras.isEmpty()) {
-                return;
-            }
-            String term = data.getTerm();
-            for (String extra : extras) {
-                int index = term.indexOf(extra);
-                if (index < 0) {
-                    continue;
-                }
-                TermData termData = new TermData();
-                termData.setTerm(extra);
-                termData.setStart(data.getStart() + index);
-                termData.setEnd(termData.getStart() + extra.length() - 1);
-                termData.setUserData(null);
-                termData.setType(TermType.EXTRA);
-                dataList.add(termData);
-            }
         }
     }
 

@@ -1,13 +1,12 @@
 package com.wangdg.lcs.seg.concrete;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
-import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.TermType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 中文单词分词算法

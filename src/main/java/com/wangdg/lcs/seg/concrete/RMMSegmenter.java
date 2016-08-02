@@ -1,14 +1,14 @@
 package com.wangdg.lcs.seg.concrete;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
 import com.wangdg.lcs.trie.TermType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 逆向最大配置分词
@@ -69,7 +69,6 @@ public class RMMSegmenter extends BaseSegmenter {
                     data.setUserData(qr.getUserData());
                     data.setType(TermType.WORD);
                     dataList.add(data);
-                    this.handleExtraSegments(data, dataList);
                     break;
                 }
             }

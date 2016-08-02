@@ -1,6 +1,5 @@
 package com.wangdg.lcs.trie;
 
-import com.wangdg.lcs.common.Constants;
 import com.wangdg.lcs.common.LCSRuntimeException;
 import com.wangdg.lcs.common.Utils;
 
@@ -8,9 +7,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 词典类
@@ -88,42 +85,11 @@ public class LCSDictionary {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in , "UTF-8"), 512);
         String line;
         while ((line = reader.readLine()) != null) {
-
             String trimmed = line.trim();
             if (Utils.isBlank(trimmed) || trimmed.startsWith("#")) {
                 continue;
             }
-
-            String[] array = trimmed.split(":");
-            String word = array[0];
-            UserData userData = null;
-            if (array.length > 1) {
-                userData = this.parseUserData(array[1]);
-            }
-            this.addWord(word, userData);
-        }
-    }
-
-    /**
-     * 解析UserData
-     *
-     * @param str 附加分词字符串
-     * @return UserData对象
-     */
-    protected UserData parseUserData(String str) {
-        if (str != null) {
-            String[] tokens = str.split(",");
-            UserData userData = new UserData();
-            if (tokens != null && tokens.length > 0) {
-                Set<String> extras = new HashSet<String>();
-                for (String token : tokens) {
-                    extras.add(token);
-                }
-                userData.put(Constants.USER_DATA_KEY_EXTRA, extras);
-            }
-            return userData;
-        } else {
-            return null;
+            this.addWord(trimmed, null);
         }
     }
 

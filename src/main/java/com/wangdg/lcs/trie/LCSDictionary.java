@@ -41,6 +41,31 @@ public class LCSDictionary {
      */
     public LCSDictionary(File file) {
         super();
+        initializeDictionary(file);
+    }
+
+    /**
+     * 通过输入流构建词典
+     *
+     * @param in 输入流
+     * @throws IOException
+     */
+    public LCSDictionary(InputStream in) throws IOException {
+        super();
+        this.initializeDictionary(in);
+    }
+
+    /**
+     * 通过文件构建词典
+     *
+     * @param filePath 词典文件路径
+     */
+    public LCSDictionary(String filePath) {
+        super();
+        initializeDictionary(new File(filePath));
+    }
+
+    protected void initializeDictionary(File file) {
         InputStream in = null;
         try {
             in = new FileInputStream(file);
@@ -58,17 +83,6 @@ public class LCSDictionary {
                 }
             }
         }
-    }
-
-    /**
-     * 通过输入流构建词典
-     *
-     * @param in 输入流
-     * @throws IOException
-     */
-    public LCSDictionary(InputStream in) throws IOException {
-        super();
-        this.initializeDictionary(in);
     }
 
     /**

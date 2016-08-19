@@ -34,7 +34,7 @@ List<TermData> segs = segmenter.analyze("测试文字");
 
 ```
 // 创建词典
-Dictionary dict = ...;
+LCSDictionary dict = new LCSDictionary(new File("/PATH/TO/dict.dic"));
 // 创建分词器
 ISegmenter segmenter = new FMMSegmenter(dict);
 // 分词得到结果
@@ -68,4 +68,3 @@ List<TermData> segs = segmenter.analyze("测试文字");
     <analyzer class="com.wangdg.lcs.solr.ICCAnalyzer" />
 </fieldType>
 ```
-

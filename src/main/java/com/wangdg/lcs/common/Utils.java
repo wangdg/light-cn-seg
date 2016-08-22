@@ -126,7 +126,17 @@ public class Utils {
      * @return 是/否
      */
     public static boolean isValidChar(char c) {
-        return isDigit(c) || isCommonChinese(c) || isEnglishLetter(c);
+        return isDigit(c) || isCommonChinese(c) || isEnglishLetter(c) || isExtraValidChar(c);
+    }
+
+    /**
+     * 是否为额外有效的字符
+     *
+     * @param c
+     * @return 是/否
+     */
+    private static boolean isExtraValidChar(char c) {
+        return c == '&' || c == ':' || c == '.';
     }
 
     /**

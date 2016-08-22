@@ -136,7 +136,7 @@ public class Utils {
      * @return 是/否
      */
     private static boolean isExtraValidChar(char c) {
-        return c == '&' || c == ':' || c == '.';
+        return c == '&' || c == ':' || c == '.' || c == '·';
     }
 
     /**

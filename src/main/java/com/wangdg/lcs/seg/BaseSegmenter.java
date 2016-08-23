@@ -1,9 +1,11 @@
 package com.wangdg.lcs.seg;
 
+import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
 import com.wangdg.lcs.trie.TermType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -133,6 +135,49 @@ public abstract class BaseSegmenter implements ISegmenter {
                 data.setUserData(null);
                 data.setType(defType);
             }
+        }
+    }
+
+    /**
+     * 文本分块
+     *
+     * @param chars 字符数组
+     * @return 文本分块列表
+     */
+    protected static List<CharBlock> getCharBlocks(char[] chars) {
+        List<CharBlock> list = new ArrayList<CharBlock>();
+        if (chars != null) {
+            int pointer = 0;
+            StringBuilder buffer = new StringBuilder();
+            while (pointer < chars.length) {
+                char c = chars[pointer];
+                if (Utils.isCommonChinese(c)) {
+                    handleValidCharBuffer(list, buffer, chars, pointer - buffer.length());
+                    list.add(CharBlock.of(chars, pointer, pointer, CharBlockType.VALID_CHAR));
+                } else {
+                    if (Utils.isValidChar(c)) {
+                        buffer.append(c);
+                    } else {
+                        handleValidCharBuffer(list, buffer, chars, pointer - buffer.length());
+                        list.add(CharBlock.of(chars, pointer, pointer, CharBlockType.INVALID_CHAR));
+                    }
+                }
+                pointer += 1;
+            }
+        }
+        return list;
+    }
+
+    private static void handleValidCharBuffer(List<CharBlock> blocks, StringBuilder buf, char[] chars, int start) {
+        if (blocks == null || buf == null) {
+            return;
+        }
+        if (buf.length() > 0) {
+            blocks.add(CharBlock.of(chars,
+                    start,
+                    start + buf.length() - 1,
+                    CharBlockType.SYMBOL));
+            buf.delete(0, buf.length());
         }
     }
 

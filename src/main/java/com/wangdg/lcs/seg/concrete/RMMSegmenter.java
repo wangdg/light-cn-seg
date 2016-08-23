@@ -76,6 +76,9 @@ public class RMMSegmenter extends BaseSegmenter {
                 dataList.add(data);
             }
 
+            // 处理Symbol分词
+            handleSymbolSegments(data, dataList);
+
             pointer -= pointerDelta;
         }
 

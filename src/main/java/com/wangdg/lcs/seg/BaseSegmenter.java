@@ -43,27 +43,6 @@ public abstract class BaseSegmenter implements ISegmenter {
     }
 
     /**
-     * 处理非中文Buffer
-     *
-     * @param buf 非中文Buffer
-     * @param start 开始位置
-     * @param dataList 导入数据列表
-     */
-    protected void handleNonCNBuffer(StringBuffer buf, int start, List<TermData> dataList) {
-        if (buf != null && buf.length() > 0) {
-            String term = buf.toString();
-            TermData data = new TermData();
-            data.setTerm(term);
-            data.setStart(start);
-            data.setEnd(start + buf.length() - 1);
-            this.fillTermUserDataAndType(data, dictionary, TermType.SYMBOL);
-            dataList.add(data);
-            this.handleSymbolSegments(data, dataList);
-            buf.delete(0, buf.length());
-        }
-    }
-
-    /**
      * 处理SYMBOL类型分词
      *
      * @param data 分词结果
@@ -110,30 +89,6 @@ public abstract class BaseSegmenter implements ISegmenter {
                     dataList.add(t);
                 }
                 break;
-            }
-        }
-    }
-
-    /**
-     * 添充分词Data中的userData和type
-     *
-     * @param data 分词数据
-     * @param dict 词典
-     * @param defType 词典中不存在使用哪种type
-     */
-    protected void fillTermUserDataAndType(TermData data, LCSDictionary dict, TermType defType) {
-        if (data == null || dict == null) {
-            return;
-        }
-        String term = data.getTerm();
-        if (term != null) {
-            DictionaryQueryResult qr = dict.query(term);
-            if (qr != null && qr.isContain()) {
-                data.setUserData(qr.getUserData());
-                data.setType(TermType.WORD);
-            } else {
-                data.setUserData(null);
-                data.setType(defType);
             }
         }
     }

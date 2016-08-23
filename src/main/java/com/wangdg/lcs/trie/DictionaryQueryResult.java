@@ -19,6 +19,18 @@ public class DictionaryQueryResult {
         this.contain = contain;
     }
 
+    public boolean isQuantifier() {
+        if (userData != null) {
+            if (userData.map().containsKey(LCSUserDataKey.QUANTIFIER)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public UserData getUserData() {
         return userData;
     }

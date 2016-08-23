@@ -57,7 +57,7 @@ public class SegmentTest extends TestCase {
         LCSDictionary dict = new LCSDictionary(file);
         FMMSegmenter segmenter = new FMMSegmenter(dict);
         segmenter.setSmart(true);
-        List<TermData> segs = segmenter.analyze("男装和手机膜iphone6splusa6 15.9");
+        List<TermData> segs = segmenter.analyze("男装和手机膜iphone6splusa6 15.9米");
         System.out.println(segs);
     }
 }

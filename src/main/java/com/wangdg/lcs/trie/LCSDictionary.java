@@ -41,6 +41,7 @@ public class LCSDictionary {
      */
     public LCSDictionary(File file) {
         super();
+        initializeQuantifiers();
         initializeDictionary(file);
     }
 
@@ -52,7 +53,8 @@ public class LCSDictionary {
      */
     public LCSDictionary(InputStream in) throws IOException {
         super();
-        this.initializeDictionary(in);
+        initializeQuantifiers();
+        initializeDictionary(in);
     }
 
     /**
@@ -62,7 +64,34 @@ public class LCSDictionary {
      */
     public LCSDictionary(String filePath) {
         super();
+        initializeQuantifiers();
         initializeDictionary(new File(filePath));
+    }
+
+    protected void initializeQuantifiers() {
+        BufferedReader reader = null;
+        String line = null;
+        try {
+            InputStream in = LCSDictionary.class.getResourceAsStream("/quantifier.dic");
+            reader = new BufferedReader(new InputStreamReader(in));
+            while ((line = reader.readLine()) != null) {
+                if (!Utils.isBlank(line)) {
+                    UserData userData = new UserData();
+                    userData.put(LCSUserDataKey.QUANTIFIER, Boolean.TRUE);
+                    this.addWord(line.trim(), userData);
+                }
+            }
+        } catch (Exception e) {
+            throw new LCSRuntimeException("Dictionary Quantifiers Init Exception.");
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    // do nothing
+                }
+            }
+        }
     }
 
     protected void initializeDictionary(File file) {
@@ -220,12 +249,14 @@ public class LCSDictionary {
      * @return 查询结果
      */
     public DictionaryQueryResult query(char[] array, int start, int length) {
+
         DictionaryQueryResult result = new DictionaryQueryResult();
         result.setContain(false);
         result.setUserData(null);
         if (array == null || length <= 0 || start < 0) {
             return result;
         }
+
         TrieNode node = treeMap.get(Character.valueOf(array[start]));
         if (node != null) {
             for (int i = start + 1; i < start + length; i++) {

@@ -1,9 +1,8 @@
 package com.wangdg.lcs.seg;
 
 import com.wangdg.lcs.common.Utils;
-import com.wangdg.lcs.trie.DictionaryQueryResult;
+import com.wangdg.lcs.seg.plugin.SymbolPlugin;
 import com.wangdg.lcs.trie.LCSDictionary;
-import com.wangdg.lcs.trie.TermType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,9 @@ public abstract class BaseSegmenter implements ISegmenter {
     /** 分词词典 */
     protected LCSDictionary dictionary;
 
+    /** 插件列表 */
+    private List<ISegmentPlugin> plugins = new ArrayList<ISegmentPlugin>();
+
     /** 细力度分词 */
     protected boolean smart;
 
@@ -25,73 +27,59 @@ public abstract class BaseSegmenter implements ISegmenter {
         super();
         dictionary = dict;
         smart = false;
+        this.initializeDefaultPlugins();
     }
 
     public BaseSegmenter() {
         super();
         dictionary = LCSDictionary.loadDefaultDictionary();
         smart = false;
+        this.initializeDefaultPlugins();
+    }
+
+    private void initializeDefaultPlugins() {
+        ISegmentPlugin symbolPlugin = new SymbolPlugin(dictionary);
+        this.addPlugin(symbolPlugin);
     }
 
     @Override
     public List<TermData> analyze(String text) {
-        if (text != null) {
-            return this.analyze(text.toCharArray());
+        return this.analyze(text.toCharArray());
+    }
+
+    @Override
+    public List<TermData> analyze(char[] array) {
+        if (array != null) {
+            List<TermData> dataList = this.doAnalysis(array);
+            for (ISegmentPlugin plugin : plugins) {
+                if (plugin.isUsedOnSmartMode()) {
+                    if (isSmart()) {
+                        plugin.doPost(dataList);
+                    }
+                } else {
+                    plugin.doPost(dataList);
+                }
+            }
+            return dataList;
         } else {
             return null;
         }
     }
 
-    /**
-     * 处理SYMBOL类型分词
-     *
-     * @param data 分词结果
-     * @param dataList 导入数据列表
-     */
-    protected void handleSymbolSegments(TermData data, List<TermData> dataList) {
-
-        if (data == null || data.getType() != TermType.SYMBOL || !isSmart()) {
-            return;
-        }
-
-        char[] array = data.getTerm().toCharArray();
-        int pt = 0;
-        int length = array.length;
-
-        while (pt < length) {
-
-            int l = length - pt;
-
-            TermData t = null;
-            for (int i = 1; i <= l; i++) {
-                DictionaryQueryResult qr = dictionary.query(array, pt, i);
-                if (qr != null && qr.isContain()) {
-                    t = new TermData();
-                    t.setTerm(new String(array, pt, i));
-                    t.setType(TermType.SYMBOL_WORD);
-                    t.setUserData(qr.getUserData());
-                    t.setStart(data.getStart() + pt);
-                    t.setEnd(t.getStart() + pt + i - 1);
-                    dataList.add(t);
-                    pt = pt + i;
-                    break;
-                }
-            }
-            if (t == null) {
-                // 剩下的文本不是原词
-                if (pt > 0) {
-                    t = new TermData();
-                    t.setTerm(new String(array, pt, length - pt));
-                    t.setType(TermType.SYMBOL_PART);
-                    t.setUserData(null);
-                    t.setStart(data.getStart() + pt);
-                    t.setEnd(t.getStart() + length - pt - 1);
-                    dataList.add(t);
-                }
-                break;
-            }
+    @Override
+    public void addPlugin(ISegmentPlugin plugin) {
+        if (plugin != null) {
+            plugins.add(plugin);
         }
     }
+
+    /**
+     * 处理过程
+     *
+     * @param array 文本字符数组
+     * @return 分词数据列表
+     */
+    protected abstract List<TermData> doAnalysis(char[] array);
 
     /**
      * 文本分块
@@ -137,6 +125,11 @@ public abstract class BaseSegmenter implements ISegmenter {
         }
     }
 
+    /**
+     * 返回TermData生产工厂对象
+     *
+     * @return 工厂对象
+     */
     protected TermDataFactory getTermFactory() {
         return TermDataFactory.getInstance();
     }

@@ -27,7 +27,7 @@ public class FMMSegmenter extends BaseSegmenter {
     }
 
     @Override
-    public List<TermData> analyze(char[] array) {
+    public List<TermData> doAnalysis(char[] array) {
 
         List<TermData> dataList = new ArrayList<TermData>();
         if (array == null || array.length == 0) {
@@ -75,9 +75,6 @@ public class FMMSegmenter extends BaseSegmenter {
                 data = getTermFactory().create(sb, dictionary);
                 dataList.add(data);
             }
-
-            // 处理Symbol分词
-            handleSymbolSegments(data, dataList);
 
             pointer += pointerDelta;
         }

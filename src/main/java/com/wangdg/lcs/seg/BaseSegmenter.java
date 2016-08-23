@@ -153,17 +153,18 @@ public abstract class BaseSegmenter implements ISegmenter {
                 char c = chars[pointer];
                 if (Utils.isCommonChinese(c)) {
                     handleValidCharBuffer(list, buffer, chars, pointer - buffer.length());
-                    list.add(CharBlock.of(chars, pointer, pointer, CharBlockType.VALID_CHAR));
+                    list.add(CharBlock.of(chars, pointer, pointer, CharBlockType.CHAR));
                 } else {
                     if (Utils.isValidChar(c)) {
                         buffer.append(c);
                     } else {
                         handleValidCharBuffer(list, buffer, chars, pointer - buffer.length());
-                        list.add(CharBlock.of(chars, pointer, pointer, CharBlockType.INVALID_CHAR));
+                        list.add(CharBlock.of(chars, pointer, pointer, CharBlockType.SKIP));
                     }
                 }
                 pointer += 1;
             }
+            handleValidCharBuffer(list, buffer, chars, chars.length - buffer.length());
         }
         return list;
     }
@@ -179,6 +180,10 @@ public abstract class BaseSegmenter implements ISegmenter {
                     CharBlockType.SYMBOL));
             buf.delete(0, buf.length());
         }
+    }
+
+    protected TermDataFactory getTermFactory() {
+        return TermDataFactory.getInstance();
     }
 
     public boolean isSmart() {

@@ -7,6 +7,7 @@ package com.wangdg.lcs.common;
  */
 public class LCSRuntimeException extends RuntimeException {
 
+    /** Serial Version */
     private static final long serialVersionUID = 1L;
 
     public LCSRuntimeException(String msg) {

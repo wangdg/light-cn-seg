@@ -3,7 +3,6 @@ package com.wangdg.lcs.solr;
 import com.wangdg.lcs.common.LCSRuntimeException;
 import com.wangdg.lcs.seg.ISegmenter;
 import com.wangdg.lcs.seg.concrete.FMMSegmenter;
-import com.wangdg.lcs.seg.concrete.ICCSegmenter;
 import com.wangdg.lcs.seg.concrete.RMMSegmenter;
 import com.wangdg.lcs.trie.LCSDictionary;
 import com.wangdg.lcs.trie.LCSDictionaryManager;
@@ -68,10 +67,6 @@ public class LCSAnalyzerFactory extends TokenizerFactory {
         RMMSegmenter rmm = new RMMSegmenter(dict);
         rmm.setSmart(smart);
         segmenterMap.put("rmm", rmm);
-
-        // ICC
-        ICCSegmenter icc = new ICCSegmenter();
-        segmenterMap.put("icc", icc);
     }
 
     @Override

@@ -29,27 +29,8 @@ public class CharBlock {
         this.type = type;
     }
 
-    /**
-     * 合并目标Block，生成新Block
-     *
-     * @param block 目标Block
-     * @return 合成后Block
-     */
-    public CharBlock join(CharBlock block) {
-
-        if (block == null) {
-            return this;
-        }
-
-        if (this.charArray != block.getCharArray()) {
-            throw new RuntimeException("文本块合并必须基于共同字符数组");
-        }
-
-        if (this.end != (block.getStart() + 1)) {
-            throw new RuntimeException("只可以合并相邻的文本块");
-        }
-
-        return CharBlock.of(this.charArray, this.start, block.end, CharBlockType.JOIN);
+    public int length() {
+        return this.end - this.start + 1;
     }
 
     public char[] getCharArray() {
@@ -58,6 +39,14 @@ public class CharBlock {
 
     public int getStart() {
         return start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public CharBlockType getType() {
+        return type;
     }
 
     @Override

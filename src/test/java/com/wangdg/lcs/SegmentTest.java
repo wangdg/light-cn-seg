@@ -9,7 +9,6 @@ import com.wangdg.lcs.common.LCSRuntimeException;
 import com.wangdg.lcs.seg.ISegmenter;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.seg.concrete.FMMSegmenter;
-import com.wangdg.lcs.seg.concrete.ICCSegmenter;
 import com.wangdg.lcs.seg.concrete.RMMSegmenter;
 import com.wangdg.lcs.trie.LCSDictionary;
 
@@ -21,14 +20,12 @@ public class SegmentTest extends TestCase {
 
     private ISegmenter fmm;
     private ISegmenter rmm;
-    private ISegmenter icc;
 
     public SegmentTest() {
         super();
         LCSDictionary dict = LCSDictionary.loadDefaultDictionary();
         fmm = new FMMSegmenter(dict);
         rmm = new RMMSegmenter(dict);
-        icc = new ICCSegmenter();
     }
 
     public void test01() {
@@ -57,7 +54,7 @@ public class SegmentTest extends TestCase {
         LCSDictionary dict = new LCSDictionary(file);
         FMMSegmenter segmenter = new FMMSegmenter(dict);
         segmenter.setSmart(true);
-        List<TermData> segs = segmenter.analyze("男装和手机膜iphone6splusa6 15.9米");
+        List<TermData> segs = segmenter.analyze("男装和v领手机膜iphone6splusa6 15.9米");
         System.out.println(segs);
     }
 }

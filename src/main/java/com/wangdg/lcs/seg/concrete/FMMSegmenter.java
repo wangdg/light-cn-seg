@@ -1,14 +1,15 @@
 package com.wangdg.lcs.seg.concrete;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.wangdg.lcs.common.Utils;
 import com.wangdg.lcs.seg.BaseSegmenter;
+import com.wangdg.lcs.seg.CharBlock;
+import com.wangdg.lcs.seg.CharBlockType;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
-import com.wangdg.lcs.trie.TermType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 正向最大配置分词
@@ -34,63 +35,49 @@ public class FMMSegmenter extends BaseSegmenter {
         }
 
         char[] charArray = Utils.uniformChars(array);
+
+        List<CharBlock> blocks = getCharBlocks(charArray);
+        int blockSize = blocks.size();
         int pointer = 0;
-        StringBuffer nonCNBuffer = new StringBuffer();
 
-        while (pointer < charArray.length) {
+        while (pointer < blockSize) {
 
-            char c = charArray[pointer];
-
-            // 无效字符
-            if (!Utils.isValidChar(c)) {
-                this.handleNonCNBuffer(nonCNBuffer,
-                        pointer - nonCNBuffer.length(), dataList);
+            CharBlock sb = blocks.get(pointer);
+            if (sb.getType() == CharBlockType.SKIP) {
                 pointer += 1;
                 continue;
             }
 
-            // 非中文字符处理
-            if (!Utils.isCommonChinese(c)) {
-                nonCNBuffer.append(c);
-                pointer += 1;
-                continue;
-            }
-
-            // 处理非中文Buffer
-            this.handleNonCNBuffer(nonCNBuffer,
-                    pointer - nonCNBuffer.length(), dataList);
-
-            int length = charArray.length - pointer;
             TermData data = null;
-            for (int l = length; l > 0; l--) {
-                DictionaryQueryResult qr = dictionary.query(charArray, pointer, l);
+            int pointerDelta = 1;
+
+            for (int i = blockSize - 1; i > pointer; i--) {
+
+                CharBlock eb = blocks.get(i);
+
+                int length = eb.getEnd() - sb.getStart() + 1;
+                DictionaryQueryResult qr = dictionary.query(
+                        charArray,
+                        sb.getStart(),
+                        length);
+
                 if (qr.isContain()) {
-                    data = new TermData();
-                    data.setTerm(new String(charArray, pointer, l));
-                    data.setStart(pointer);
-                    data.setEnd(pointer + l - 1);
-                    data.setUserData(qr.getUserData());
-                    data.setType(TermType.WORD);
+                    data = getTermFactory().create(
+                            charArray, sb.getStart(), eb.getEnd(), qr);
                     dataList.add(data);
+                    pointerDelta = i - pointer + 1;
                     break;
                 }
             }
-            if (data != null) {
-                pointer += data.length();
-            } else {
-                TermData charData = new TermData();
-                charData.setTerm(String.valueOf(c));
-                charData.setStart(pointer);
-                charData.setEnd(pointer);
-                this.fillTermUserDataAndType(charData, dictionary, TermType.CHAR);
-                dataList.add(charData);
-                pointer += 1;
-            }
-        }
 
-        // 处理非中文Buffer
-        this.handleNonCNBuffer(nonCNBuffer,
-                pointer - nonCNBuffer.length(), dataList);
+            // 单字符块处理
+            if (data == null) {
+                data = getTermFactory().create(sb, dictionary);
+                dataList.add(data);
+            }
+
+            pointer += pointerDelta;
+        }
 
         return dataList;
     }

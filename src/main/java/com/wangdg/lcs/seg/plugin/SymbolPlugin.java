@@ -40,7 +40,7 @@ public class SymbolPlugin implements ISegmentPlugin {
     }
 
     @Override
-    public boolean isUsedOnSmartMode() {
+    public boolean isOnlyUsedOnSmartMode() {
         return true;
     }
 

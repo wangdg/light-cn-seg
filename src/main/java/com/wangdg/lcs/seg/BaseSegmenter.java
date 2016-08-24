@@ -52,7 +52,7 @@ public abstract class BaseSegmenter implements ISegmenter {
         if (array != null) {
             List<TermData> dataList = this.doAnalysis(array);
             for (ISegmentPlugin plugin : plugins) {
-                if (plugin.isUsedOnSmartMode()) {
+                if (plugin.isOnlyUsedOnSmartMode()) {
                     if (isSmart()) {
                         plugin.doPost(dataList);
                     }

@@ -19,5 +19,5 @@ public interface ISegmentPlugin {
      *
      * @return 是/否
      */
-    boolean isUsedOnSmartMode();
+    boolean isOnlyUsedOnSmartMode();
 }

@@ -181,6 +181,44 @@ public class LCSDictionary {
     }
 
     /**
+     * 删除词
+     *
+     * @param word 词
+     */
+    public void removeWord(String word) {
+        if (word == null) {
+            return;
+        }
+        String trimmed = word.trim();
+        DictionaryQueryResult qr = this.query(trimmed);
+        if (qr.isContain()) {
+            TrieNode node = qr.getTrieNode();
+            if (node.hasSubNode()) { // 存在子结点
+                node.setIsWord(false);
+                node.setUserData(null);
+            } else { // 不存在子结点
+                while (true) {
+                    TrieNode parent = node.getParent();
+                    if (parent != null) {
+                        if (parent.getSubNodeCount() > 1
+                                || parent.isWord()) {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                    node = parent;
+                }
+                if (node.getParent() != null) {
+                    node.getParent().removeNode(node.getCharacter());
+                } else {
+                    treeMap.remove(node.getCharacter());
+                }
+            }
+        }
+    }
+
+    /**
      * 是否包含词
      *
      * @param word
@@ -261,6 +299,7 @@ public class LCSDictionary {
         if (node != null) {
             for (int i = start + 1; i < start + length; i++) {
                 node = node.findSubNode(array[i]);
+                // 没找到下一结点时
                 if (node == null) {
                     return result;
                 }
@@ -268,6 +307,7 @@ public class LCSDictionary {
             if (node.isWord()) {
                 result.setContain(true);
                 result.setUserData(node.getUserData());
+                result.setTrieNode(node);
                 return result;
             } else {
                 return result;

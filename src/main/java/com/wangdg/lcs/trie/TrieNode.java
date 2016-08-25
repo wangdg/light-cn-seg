@@ -22,6 +22,9 @@ public class TrieNode {
     /** 用户数据 */
     private UserData userData;
 
+    /** 父结点 */
+    private TrieNode parent;
+
     /**
      * 构造方法
      *
@@ -44,7 +47,19 @@ public class TrieNode {
      */
     public void addNode(TrieNode node) {
         if (node != null) {
+            node.setParent(this);
             subNodeMap.put(node.getCharacter(), node);
+        }
+    }
+
+    /**
+     * 删除指定字符结点
+     *
+     * @param c 指定字符
+     */
+    public void removeNode(Character c) {
+        if (c != null) {
+            subNodeMap.remove(c);
         }
     }
 
@@ -104,5 +119,46 @@ public class TrieNode {
      */
     public void setUserData(UserData userData) {
         this.userData = userData;
+    }
+
+    /**
+     * 取得子结点个数
+     *
+     * @return 子结点个数
+     */
+    public int getSubNodeCount() {
+        return subNodeMap.size();
+    }
+
+    /**
+     * 是否存在子结点
+     *
+     * @return 是/否
+     */
+    public boolean hasSubNode() {
+        return !subNodeMap.isEmpty();
+    }
+
+    /**
+     * 取得父结点
+     *
+     * @return 父结点
+     */
+    public TrieNode getParent() {
+        return parent;
+    }
+
+    /**
+     * 设置结点的父结点
+     *
+     * @param parent 父结点
+     */
+    public void setParent(TrieNode parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(character);
     }
 }

@@ -11,6 +11,9 @@ public class DictionaryQueryResult {
     /** 附加信息 */
     private UserData userData;
 
+    /** 词典树结点 */
+    private TrieNode trieNode = null;
+
     public boolean isContain() {
         return contain;
     }
@@ -37,5 +40,13 @@ public class DictionaryQueryResult {
 
     public void setUserData(UserData userData) {
         this.userData = userData;
+    }
+
+    public TrieNode getTrieNode() {
+        return trieNode;
+    }
+
+    public void setTrieNode(TrieNode trieNode) {
+        this.trieNode = trieNode;
     }
 }

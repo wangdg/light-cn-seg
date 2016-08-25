@@ -10,6 +10,7 @@ import com.wangdg.lcs.seg.ISegmenter;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.seg.concrete.FMMSegmenter;
 import com.wangdg.lcs.seg.concrete.RMMSegmenter;
+import com.wangdg.lcs.trie.DictionaryQueryResult;
 import com.wangdg.lcs.trie.LCSDictionary;
 
 import junit.framework.TestCase;
@@ -56,5 +57,21 @@ public class SegmentTest extends TestCase {
         segmenter.setSmart(true);
         List<TermData> segs = segmenter.analyze("男装和v领手机膜iphone6splusa6 15.9米");
         System.out.println(segs);
+    }
+
+    public void test05() {
+        URL url = LCSDictionary.class.getResource("/test1.dic");
+        File file;
+        try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            throw new LCSRuntimeException("Dictionary Init Error!");
+        }
+        LCSDictionary dict = new LCSDictionary(file);
+        DictionaryQueryResult qr = dict.query("v领");
+        System.out.println(qr.getNodeList());
+        dict.removeWord("v领");
+        qr = dict.query("v领");
+        System.out.println(qr.isContain());
     }
 }

@@ -69,7 +69,7 @@ public class SegmentTest extends TestCase {
         }
         LCSDictionary dict = new LCSDictionary(file);
         DictionaryQueryResult qr = dict.query("v领");
-        System.out.println(qr.getNodeList());
+        System.out.println(qr.isContain());
         dict.removeWord("v领");
         qr = dict.query("v领");
         System.out.println(qr.isContain());

@@ -7,6 +7,7 @@ import com.wangdg.lcs.trie.LCSDictionary;
 import com.wangdg.lcs.trie.TermType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class SymbolPlugin implements ISegmentPlugin {
         }
         if (!extraList.isEmpty()) {
             dataList.addAll(extraList);
+            Collections.sort(dataList);
         }
     }
 
@@ -68,30 +70,36 @@ public class SymbolPlugin implements ISegmentPlugin {
             for (int i = 1; i <= l; i++) {
                 DictionaryQueryResult qr = dictionary.query(array, pt, i);
                 if (qr != null && qr.isContain()) {
-                    t = new TermData();
-                    t.setTerm(new String(array, pt, i));
-                    t.setType(TermType.SYMBOL_WORD);
-                    t.setUserData(qr.getUserData());
-                    t.setStart(data.getStart() + pt);
-                    t.setEnd(t.getStart() + pt + i - 1);
-                    dataList.add(t);
+                    // 原词情况
+                    if (pt == 0 && i == length) {
+                        data.setType(TermType.SYMBOL_WORD);
+                    } else {
+                        t = new TermData();
+                        t.setTerm(new String(array, pt, i));
+                        t.setType(TermType.SYMBOL_WORD);
+                        t.setUserData(qr.getUserData());
+                        t.setStart(data.getStart() + pt);
+                        t.setEnd(t.getStart() + pt + i - 1);
+                        dataList.add(t);
+                    }
                     pt = pt + i;
                     break;
                 }
             }
             if (t == null) {
-                // 剩下的文本不是原词
-                if (pt > 0) {
-                    t = new TermData();
-                    t.setTerm(new String(array, pt, length - pt));
-                    t.setType(TermType.SYMBOL_PART);
-                    t.setUserData(null);
-                    t.setStart(data.getStart() + pt);
-                    t.setEnd(t.getStart() + length - pt - 1);
-                    dataList.add(t);
-                }
                 break;
             }
+        }
+
+        // 剩下的文本不是原词
+        if (0 < pt && pt < length) {
+            TermData t = new TermData();
+            t.setTerm(new String(array, pt, length - pt));
+            t.setType(TermType.SYMBOL_PART);
+            t.setUserData(null);
+            t.setStart(data.getStart() + pt);
+            t.setEnd(t.getStart() + length - pt - 1);
+            dataList.add(t);
         }
     }
 }

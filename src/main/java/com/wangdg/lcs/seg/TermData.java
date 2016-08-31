@@ -8,7 +8,7 @@ import com.wangdg.lcs.trie.UserData;
  *
  * @author wangdg
  */
-public class TermData {
+public class TermData implements Comparable<TermData> {
 
     /** 分词文本 */
     private String term;
@@ -76,5 +76,20 @@ public class TermData {
     @Override
     public String toString() {
         return String.format("%s(%d, %d, %s)", term, start, end, type);
+    }
+
+    @Override
+    public int compareTo(TermData o) {
+        if (o != null) {
+            if (this.getStart() > o.getStart()) {
+                return 1;
+            } else if (this.getStart() < o.getStart()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 1;
+        }
     }
 }

@@ -1,10 +1,13 @@
 package com.wangdg.lcs.seg;
 
 import com.wangdg.lcs.common.Utils;
+import com.wangdg.lcs.seg.plugin.SkipPlugin;
 import com.wangdg.lcs.seg.plugin.SymbolPlugin;
 import com.wangdg.lcs.trie.LCSDictionary;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -39,7 +42,9 @@ public abstract class BaseSegmenter implements ISegmenter {
 
     private void initializeDefaultPlugins() {
         ISegmentPlugin symbolPlugin = new SymbolPlugin(dictionary);
+        ISegmentPlugin skipPlugin = new SkipPlugin();
         this.addPlugin(symbolPlugin);
+        this.addPlugin(skipPlugin);
     }
 
     @Override
@@ -51,6 +56,7 @@ public abstract class BaseSegmenter implements ISegmenter {
     public List<TermData> analyze(char[] array) {
         if (array != null) {
             List<TermData> dataList = this.doAnalysis(array);
+            Collections.sort(dataList);
             for (ISegmentPlugin plugin : plugins) {
                 if (plugin.isOnlyUsedOnSmartMode()) {
                     if (isSmart()) {

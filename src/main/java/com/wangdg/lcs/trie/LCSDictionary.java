@@ -174,6 +174,12 @@ public class LCSDictionary {
             }
 
             int wordLength = trim.length();
+
+            if (wordLength == 1) {
+                node.setIsWord(true);
+                node.setUserData(userData);
+            }
+
             for (int i = 1; i < wordLength; i++) {
                 boolean isWord = (i == (wordLength - 1));
                 TrieNode subNode = node.findSubNode(charArray[i]);
@@ -323,7 +329,16 @@ public class LCSDictionary {
             }
 
             TrieNode node = treeMap.get(Character.valueOf(array[start]));
+
             if (node != null) {
+
+                if (length == 1 && node.isWord()) {
+                    result.setContain(true);
+                    result.setUserData(node.getUserData());
+                    result.setTrieNode(node);
+                    return result;
+                }
+
                 for (int i = start + 1; i < start + length; i++) {
                     node = node.findSubNode(array[i]);
                     // 没找到下一结点时

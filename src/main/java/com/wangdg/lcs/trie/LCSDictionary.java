@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 词典类
@@ -18,6 +19,9 @@ public class LCSDictionary {
 
     /** Tree Map */
     private Map<Character, TrieNode> treeMap = new HashMap<Character, TrieNode>();
+
+    /** 锁对象 */
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     public static LCSDictionary loadDefaultDictionary() {
         URL url = LCSDictionary.class.getResource("/main.dic");
@@ -144,7 +148,13 @@ public class LCSDictionary {
      */
     public void addWord(String word, UserData userData) {
 
-        if (word != null) {
+        if (word == null) {
+            return;
+        }
+
+        lock.writeLock().lock();
+
+        try {
 
             String trim = word.trim();
             if (trim.length() <= 0) {
@@ -177,6 +187,9 @@ public class LCSDictionary {
                 }
                 node = subNode;
             }
+
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
@@ -186,35 +199,45 @@ public class LCSDictionary {
      * @param word 词
      */
     public void removeWord(String word) {
+
         if (word == null) {
             return;
         }
-        String trimmed = word.trim();
-        DictionaryQueryResult qr = this.query(trimmed);
-        if (qr.isContain()) {
-            TrieNode node = qr.getTrieNode();
-            if (node.hasSubNode()) { // 存在子结点
-                node.setIsWord(false);
-                node.setUserData(null);
-            } else { // 不存在子结点
-                while (true) {
-                    TrieNode parent = node.getParent();
-                    if (parent != null) {
-                        if (parent.getSubNodeCount() > 1
-                                || parent.isWord()) {
+
+        lock.writeLock().lock();
+
+        try {
+
+            String trimmed = word.trim();
+            DictionaryQueryResult qr = this.query(trimmed);
+            if (qr.isContain()) {
+                TrieNode node = qr.getTrieNode();
+                if (node.hasSubNode()) { // 存在子结点
+                    node.setIsWord(false);
+                    node.setUserData(null);
+                } else { // 不存在子结点
+                    while (true) {
+                        TrieNode parent = node.getParent();
+                        if (parent != null) {
+                            if (parent.getSubNodeCount() > 1
+                                    || parent.isWord()) {
+                                break;
+                            }
+                        } else {
                             break;
                         }
-                    } else {
-                        break;
+                        node = parent;
                     }
-                    node = parent;
-                }
-                if (node.getParent() != null) {
-                    node.getParent().removeNode(node.getCharacter());
-                } else {
-                    treeMap.remove(node.getCharacter());
+                    if (node.getParent() != null) {
+                        node.getParent().removeNode(node.getCharacter());
+                    } else {
+                        treeMap.remove(node.getCharacter());
+                    }
                 }
             }
+
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
@@ -288,32 +311,40 @@ public class LCSDictionary {
      */
     public DictionaryQueryResult query(char[] array, int start, int length) {
 
-        DictionaryQueryResult result = new DictionaryQueryResult();
-        result.setContain(false);
-        result.setUserData(null);
-        if (array == null || length <= 0 || start < 0) {
-            return result;
-        }
+        lock.readLock().lock();
 
-        TrieNode node = treeMap.get(Character.valueOf(array[start]));
-        if (node != null) {
-            for (int i = start + 1; i < start + length; i++) {
-                node = node.findSubNode(array[i]);
-                // 没找到下一结点时
-                if (node == null) {
+        try {
+
+            DictionaryQueryResult result = new DictionaryQueryResult();
+            result.setContain(false);
+            result.setUserData(null);
+            if (array == null || length <= 0 || start < 0) {
+                return result;
+            }
+
+            TrieNode node = treeMap.get(Character.valueOf(array[start]));
+            if (node != null) {
+                for (int i = start + 1; i < start + length; i++) {
+                    node = node.findSubNode(array[i]);
+                    // 没找到下一结点时
+                    if (node == null) {
+                        return result;
+                    }
+                }
+                if (node.isWord()) {
+                    result.setContain(true);
+                    result.setUserData(node.getUserData());
+                    result.setTrieNode(node);
+                    return result;
+                } else {
                     return result;
                 }
-            }
-            if (node.isWord()) {
-                result.setContain(true);
-                result.setUserData(node.getUserData());
-                result.setTrieNode(node);
-                return result;
             } else {
                 return result;
             }
-        } else {
-            return result;
+
+        } finally {
+            lock.readLock().unlock();
         }
     }
 

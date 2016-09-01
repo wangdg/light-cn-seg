@@ -73,5 +73,8 @@ public class SegmentTest extends TestCase {
         dict.removeWord("v领");
         qr = dict.query("v领");
         System.out.println(qr.isContain());
+        dict.addWord("v领", null);
+        qr = dict.query("v领");
+        System.out.println(qr.isContain());
     }
 }

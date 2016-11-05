@@ -8,5 +8,6 @@ public enum TermType {
     CHAR,
     SYMBOL,
     SYMBOL_WORD,
-    SYMBOL_PART
+    SYMBOL_PART,
+    SYNONYM
 }

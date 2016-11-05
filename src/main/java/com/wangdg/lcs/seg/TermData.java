@@ -8,7 +8,7 @@ import com.wangdg.lcs.trie.UserData;
  *
  * @author wangdg
  */
-public class TermData implements Comparable<TermData> {
+public class TermData implements Comparable<TermData>, Cloneable {
 
     /** 分词文本 */
     private String term;
@@ -91,5 +91,15 @@ public class TermData implements Comparable<TermData> {
         } else {
             return 1;
         }
+    }
+
+    public TermData clone() {
+        TermData t;
+        try {
+            t = (TermData) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+        return t;
     }
 }

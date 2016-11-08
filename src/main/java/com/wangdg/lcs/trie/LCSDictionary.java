@@ -23,9 +23,21 @@ public class LCSDictionary {
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     public static LCSDictionary loadDefaultDictionary() {
-        URL url = LCSDictionary.class.getResource("/main.dic");
-        File file = new File(url.getFile());
-        return new LCSDictionary(file);
+        InputStream is = null;
+        try {
+            is = LCSDictionary.class.getResourceAsStream("/main.dic");
+            return new LCSDictionary(is);
+        } catch (IOException e) {
+            throw new LCSRuntimeException("读取默认词典IO异常");
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    // do nothing
+                }
+            }
+        }
     }
 
     public LCSDictionary() {

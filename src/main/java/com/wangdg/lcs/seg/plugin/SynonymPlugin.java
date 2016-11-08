@@ -6,10 +6,7 @@ import com.wangdg.lcs.seg.ISegmentPlugin;
 import com.wangdg.lcs.seg.TermData;
 import com.wangdg.lcs.trie.TermType;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -46,7 +43,7 @@ public class SynonymPlugin implements ISegmentPlugin {
     public SynonymPlugin(File file) {
         super();
         try {
-            this.initializeWithFile(file);
+            this.loadFromInputStream(new FileInputStream(file));
         } catch (IOException e) {
             throw new LCSRuntimeException(ERROR_INIT_IO);
         }
@@ -59,13 +56,30 @@ public class SynonymPlugin implements ISegmentPlugin {
         super();
     }
 
-    protected void initializeWithFile(File file) throws IOException {
+    /**
+     * 构造方法
+     *
+     * @param in 输入流
+     */
+    public SynonymPlugin(InputStream in) {
+        super();
+        try {
+            this.loadFromInputStream(in);
+        } catch (IOException e) {
+            throw new LCSRuntimeException(ERROR_INIT_IO);
+        }
+    }
 
-        if (file == null) {
+    protected void loadFromInputStream(InputStream in) throws IOException {
+
+        if (in == null) {
             return;
         }
 
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        extWordMap = new HashMap<String, Set<String>>();
+        unifyWordMap = new HashMap<String, String>();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
         String line;
         while ((line = reader.readLine()) != null) {
@@ -120,13 +134,16 @@ public class SynonymPlugin implements ISegmentPlugin {
                 }
             }
         }
-
-        reader.close();
     }
 
     public void load(File file) {
+
+        if (file == null) {
+            return;
+        }
+
         try {
-            this.initializeWithFile(file);
+            this.loadFromInputStream(new FileInputStream(file));
         } catch (IOException e) {
             throw new LCSRuntimeException(ERROR_INIT_IO);
         }

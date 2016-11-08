@@ -4,7 +4,6 @@ import com.wangdg.lcs.common.LCSRuntimeException;
 import com.wangdg.lcs.common.Utils;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +24,7 @@ public class LCSDictionary {
 
     public static LCSDictionary loadDefaultDictionary() {
         URL url = LCSDictionary.class.getResource("/main.dic");
-        File file;
-        try {
-            file = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            throw new LCSRuntimeException("Dictionary Init Error!");
-        }
+        File file = new File(url.getFile());
         return new LCSDictionary(file);
     }
 

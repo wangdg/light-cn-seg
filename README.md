@@ -11,11 +11,21 @@ LCS中文分词
 ### 2.1 导入Jar
 
 ```
-<dependency>
-    <groupId>com.wangdg</groupId>
-    <artifactId>light-cn-seg</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-</dependency>
+<repositories>
+    <repository>
+        <id>sonatype</id>
+        <name>sonatype</name>
+        <url>https://oss.sonatype.org/content/groups/staging</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.wangdg</groupId>
+        <artifactId>light-cn-seg</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
 ```
 
 
